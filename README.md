@@ -1,2 +1,2 @@
-# code-peer
+# CodePeer
 Connecting CS students with peer tutors.
