@@ -6,8 +6,7 @@
     "url": "https://github.com/estimmerman/code-peer.git"
   },
   "scripts": {
-    "start": "node app.js",
-    // "test": "mocha --reporter spec --timeout 5000"
+    "start": "node app.js"
   },
   "dependencies": {
     "async": "^1.5.0",
@@ -34,15 +33,10 @@
     "passport": "0.3.0",
     "request": "^2.65.0",
     "serve-favicon": "^2.3.0",
-    "validator": "^4.2.1",
-    // "yui": "^3.18.1"
+    "validator": "^4.2.1"
   },
   "devDependencies": {
-  //   "blessed": "^0.1.81",
-  //   "chai": "^3.4.1",
-  //   "mocha": "^2.3.3",
-    "multiline": "^1.0.2",
-  //   "supertest": "^1.1.0"
+    "multiline": "^1.0.2"
   },
   "license": "MIT"
 }
