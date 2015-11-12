@@ -11729,11 +11729,14 @@ footer p, footer ul {
   margin-right: 6px;
 }
 
-.footer-a {
-  transition: all 0.2s linear;
-  color: #252525;
+.a-link:hover {
+  text-decoration: none;
 }
 
-a:hover.footer-a {
-  text-decoration: none;
+.a-link {
+  transition: all 0.2s linear;
+}
+
+.footer-a {
+  color: #252525;
 }
