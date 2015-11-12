@@ -62,3 +62,12 @@ footer {
 .fa {
   margin-right: 6px;
 }
+
+.footer-a {
+  transition: all 0.2s linear;
+  color: #252525;
+}
+
+a:hover.footer-a {
+  text-decoration: none;
+}
