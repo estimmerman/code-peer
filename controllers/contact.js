@@ -34,11 +34,11 @@ exports.postContact = function(req, res) {
     return res.redirect('/contact');
   }
 
-  var from = req.body.email;
-  var name = req.body.name;
+  var from = req.body.name + ' < ' + req.body.email + '>';
+  // var name = req.body.name;
   var body = req.body.message;
-  var to = 'your@email.com';
-  var subject = 'Contact Form | Hackathon Starter';
+  var to = 'erictimmerman@college.harvard.edu';
+  var subject = 'Contact Form | CodePeer';
 
   var mailOptions = {
     to: to,

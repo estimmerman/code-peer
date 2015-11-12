@@ -22,13 +22,25 @@ exports.getLogin = function(req, res) {
  * Sign in using email and password.
  */
 exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.sanitize('email').trim();
+
+  req.checkBody({
+   'email': {
+      notEmpty: true,
+      isEmail: {
+        errorMessage: 'Invalid email.'
+      }
+    },
+    'password': {
+      notEmpty: true,
+      errorMessage: 'Invalid password.'
+    }
+  });
 
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('errors', {msg: 'Invalid email or password.'});
     return res.redirect('/login');
   }
 
@@ -52,7 +64,7 @@ exports.postLogin = function(req, res, next) {
  */
 exports.logout = function(req, res) {
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 };
 
 /**
@@ -71,18 +83,27 @@ exports.getSignup = function(req, res) {
  * Create a new local account.
  */
 exports.postSignup = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.sanitize('firstName').trim()
+  req.sanitize('lastName').trim()
+  req.sanitize('email').trim()
+
+  req.assert('firstName', 'You must enter a first name.').notEmpty();
+  req.assert('lastName', 'You must enter a last name.').notEmpty();
+
+  req.assert('email', 'Email is not valid.').isEmail();
+  req.assert('password', 'Password must be at least 4 characters long.').len(4);
+  req.assert('confirmPassword', 'Passwords do not match.').equals(req.body.password);
 
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('errors', errors[0]);
     return res.redirect('/signup');
   }
 
   var user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     email: req.body.email,
     password: req.body.password
   });
@@ -119,7 +140,9 @@ exports.getAccount = function(req, res) {
 exports.postUpdateProfile = function(req, res, next) {
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
-    user.email = req.body.email || '';
+    user.firstName = req.body.firstName || '';
+    user.lastName = req.body.lastName || '';
+    user.about = req.body.about || '';
 
     user.save(function(err) {
       if (err) return next(err);
@@ -134,25 +157,32 @@ exports.postUpdateProfile = function(req, res, next) {
  * Update current password.
  */
 exports.postUpdatePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('newPassword', 'Password must be at least 4 characters long.').len(4);
+  req.assert('confirmPassword', 'Passwords do not match.').equals(req.body.newPassword);
 
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('errors', errors[0]);
     return res.redirect('/account');
   }
 
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
 
-    user.password = req.body.password;
+    user.comparePassword(req.body.oldPassword, function(err, isMatch) {
+      if (!isMatch) {
+        req.flash('errors', { msg: 'Old password does not match your current password.' });
+        return res.redirect('/account');
+      }
 
-    user.save(function(err) {
-      if (err) return next(err);
-      req.flash('success', { msg: 'Password has been changed.' });
-      res.redirect('/account');
+      user.password = req.body.newPassword;
+
+      user.save(function(err) {
+        if (err) return next(err);
+        req.flash('success', { msg: 'Password has been changed.' });
+        res.redirect('/account');
+      });
     });
   });
 };
@@ -166,7 +196,7 @@ exports.postDeleteAccount = function(req, res, next) {
     if (err) return next(err);
     req.logout();
     req.flash('info', { msg: 'Your account has been deleted.' });
-    res.redirect('/');
+    res.redirect('/login');
   });
 };
 
@@ -240,8 +270,8 @@ exports.postReset = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Your Hackathon Starter password has been changed',
+        from: 'CodePeer <erictimmerman@college.harvard.edu>',
+        subject: 'Your CodePeer password has been changed',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };
@@ -315,8 +345,8 @@ exports.postForgot = function(req, res, next) {
       });
       var mailOptions = {
         to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Reset your password on Hackathon Starter',
+        from: 'CodePeer <erictimmerman@college.harvard.edu>',
+        subject: 'Reset your password on CodePeer',
         text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
           'http://' + req.headers.host + '/reset/' + token + '\n\n' +
