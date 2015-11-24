@@ -2,7 +2,10 @@ extends ../layout
 
 block content
   .page-header
-    h3 Profile Information
+    if user.role == 0
+      h3 Student Account Manager
+    else
+      h3 Tutor Account Manager
 
   form.form-horizontal(action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
@@ -18,6 +21,10 @@ block content
       label.col-sm-3.control-label(for='lastName') Last Name
       .col-sm-7
         input.form-control(type='text', name='lastName', id='lastName', value='#{user.lastName}', required)
+    .form-group
+      label.col-sm-3.control-label(for='school') School
+      .col-sm-7
+        input.form-control(type='text', name='school', id='school', value='#{user.school}', required)
     .form-group
       label.col-sm-3.control-label(for='about') About Me
       .col-sm-7

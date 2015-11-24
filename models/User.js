@@ -3,12 +3,18 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  firstName: { type: String, require: true },
+  lastName: { type: String, require: true },
   about: String,
 
-  email: { type: String, unique: true, lowercase: true },
-  password: String,
+  // 0 --> student (default)
+  // 1 --> tutor
+  role: { type: Number, require: true, default: 0 },
+  school: { type: String, require: true },
+  // courses: { type: Array, require: false, default: [] },
+
+  email: { type: String, require: true, unique: true, lowercase: true },
+  password: { type:String, require: true},
 
   tokens: Array,
   resetPasswordToken: String,

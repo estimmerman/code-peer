@@ -85,10 +85,13 @@ exports.getSignup = function(req, res) {
 exports.postSignup = function(req, res, next) {
   req.sanitize('firstName').trim()
   req.sanitize('lastName').trim()
+  req.sanitize('school').trim()
   req.sanitize('email').trim()
 
   req.assert('firstName', 'You must enter a first name.').notEmpty();
   req.assert('lastName', 'You must enter a last name.').notEmpty();
+  req.assert('role', 'You must choose an account type.').notEmpty();
+  req.assert('school', 'You must enter a school.').notEmpty();
 
   req.assert('email', 'Email is not valid.').isEmail();
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
@@ -104,6 +107,8 @@ exports.postSignup = function(req, res, next) {
   var user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    role: req.body.role,
+    school: req.body.school,
     email: req.body.email,
     password: req.body.password
   });
@@ -142,6 +147,7 @@ exports.postUpdateProfile = function(req, res, next) {
     if (err) return next(err);
     user.firstName = req.body.firstName || '';
     user.lastName = req.body.lastName || '';
+    user.school = req.body.school || '';
     user.about = req.body.about || '';
 
     user.save(function(err) {

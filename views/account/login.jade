@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   .page-header
-    h3 Sign in
+    h3 Log in
   form.form-horizontal(method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
@@ -17,6 +17,6 @@ block content
       .col-sm-offset-3.col-sm-7
         button.col-sm-3.btn.btn-primary(type='submit')
           i.fa.fa-user
-          | Login
+          | Log In
         a.btn.btn-link.a-link(href='/forgot') Forgot your password?
         a.btn.btn-link.pull-right.a-link(href='/signup') Sign Up

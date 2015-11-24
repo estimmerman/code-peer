@@ -14,6 +14,16 @@ block content
       .col-sm-7
         input.form-control(type='text', name='lastName', id='lastName', required, placeholder='Last Name')
     .form-group
+      label.col-sm-3.control-label(for='role') Account Type
+      .col-sm-7
+        select.form-control(name='role', id='role', required)
+          option(value='0') Student
+          option(value='1') Tutor
+    .form-group
+      label.col-sm-3.control-label(for='school') School
+      .col-sm-7
+        input.form-control(type='text', name='school', id='school', required, placeholder='School Name')
+    .form-group
       label.col-sm-3.control-label(for='email') Email
       .col-sm-7
         input.form-control(type='email', name='email', id='email', required, placeholder='Email')
@@ -29,5 +39,5 @@ block content
       .col-sm-offset-3.col-sm-7
         button.btn.btn-success(type='submit')
           i.fa.fa-user-plus
-          | Signup
+          | Sign Up
         a.btn.btn-link.pull-right.a-link(href='/login') Log In
