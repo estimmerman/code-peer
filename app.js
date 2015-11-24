@@ -87,13 +87,15 @@ app.use(function(req, res, next) {
   res.locals.user = req.user;
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+var oneDay = 86400000;
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneDay }));
 
 
 /**
  * Primary app routes.
  */
-app.get('/', passportConf.isAuthenticated, homeController.index);
+app.get('/', homeController.getLandingPage)
+app.get('/home', passportConf.isAuthenticated, homeController.index);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

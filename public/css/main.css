@@ -43,6 +43,10 @@ a:hover {
   border-color: #A41034;
 }
 
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+  outline: none;
+}
+
 .btn-primary {
   background: white;
   padding: 8px 15px;
@@ -189,6 +193,27 @@ a:hover {
   color: white;
 }
 
+.navbar-default .navbar-toggle {
+  border-color: white;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: white;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+  background-color: #5d091d;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: white;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
+    color: #f2f2f2;
+  }
+}
+
 .fa {
   margin-right: 6px;
 }
@@ -203,4 +228,16 @@ a:hover {
 
 .m-right-15 {
   margin-right: 15px;
+}
+
+.m-left-15 {
+  margin-left: 15px;
+}
+
+.m-top-15 {
+  margin-top: 15px;
+}
+
+.m-bottom-15 {
+  margin-bottom: 15px;
 }
