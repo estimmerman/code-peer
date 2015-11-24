@@ -16,16 +16,25 @@ footer {
   line-height: 45px;
 }
 
-$dark-crimson: #660000;
-$crimson-border: #800000;
 $crimson: #A41034;
+$crimson-dark: #5d091d;
+$crimson-light: #e8174a;
+$crimson-semi-dark: #800000;
+
 $off-white: #f2f2f2;
-$light-gray: #b6b6b6;
+$gray: #b6b6b6;
 
 $salmon: #e5665d;
+$salmon-dark: #dc2f23;
+$salmon-light: #ed9791;
+
 $turquoise: #48c4b7;
 $turquoise-dark: #329a8f;
-$light-blue: #afe6f1;
+$turquoise-light: #78d3ca;
+
+$blue: #7dd6e8;
+$blue-dark: #3cc2dd;
+$blue-light: #afe6f1;
 
 a, span, h1, h2, h3, h4, h5, h6, p {
   font-family: 'Lato', sans-serif;
@@ -40,7 +49,8 @@ p, a {
 }
 
 a:hover {
-  color: $dark-crimson;
+  color: $crimson-dark;
+  text-decoration: none;
 }
 
 .alert-danger {
@@ -56,41 +66,57 @@ a:hover {
 .btn-primary {
   background: white;
   padding: 8px 15px;
-  border: 2px solid $crimson-border;
-  color: $crimson-border;
+  border: 2px solid $crimson-semi-dark;
+  color: $crimson-semi-dark;
   transition: all 0.2s linear;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
     color: $crimson;
     background: $off-white;
-    border-color: $dark-crimson;
+    border-color: $crimson-dark;
 }
 
 .btn-primary:active, .btn-primary.active {
-    border-color: #007299;
-    color: #007299;
+    border-color: $off-white;
+    color: $crimson-light;
     box-shadow: none;
 }
 
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+    border-color: $crimson-semi-dark;
+    color: white;
+    background: $crimson-light;
+    box-shadow: none;
+    outline: none;
+}
+
 .btn-danger {
-  background: $dark-crimson;
+  background: $crimson-dark;
   padding: 8px 15px;
-  border: 2px solid $crimson-border;
+  border: 2px solid $crimson-semi-dark;
   color: white;
   transition: all 0.2s linear;
 }
 
 .btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open > .dropdown-toggle.btn-danger {
-    color: $dark-crimson;
-    background: $off-white;
-    border-color: $dark-crimson;
+    color: $off-white;
+    background: $crimson;
+    border-color: $off-white;
 }
 
 .btn-danger:active, .btn-danger.active {
-    border-color: #007299;
-    color: #007299;
+    border-color: $crimson-dark;
+    color: white;
     box-shadow: none;
+}
+
+.btn-danger.active.focus, .btn-danger.active:focus, .btn-danger.active:hover, .btn-danger:active.focus, .btn-danger:active:focus, .btn-danger:active:hover, .open>.dropdown-toggle.btn-danger.focus, .open>.dropdown-toggle.btn-danger:focus, .open>.dropdown-toggle.btn-danger:hover {
+    border-color: $crimson-light;
+    color: $off-white;
+    background: $crimson-dark;
+    box-shadow: none;
+    outline: none;
 }
 
 .btn-success {
@@ -102,15 +128,17 @@ a:hover {
 }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open > .dropdown-toggle.btn-success {
-    color: $turquoise;
-    background: $off-white;
+    color: white;
+    background: $turquoise-light;
     border-color: $turquoise-dark;
 }
 
-.btn-success:active, .btn-success.active {
-    border-color: #007299;
-    color: #007299;
+.btn-success.active.focus, .btn-success.active:focus, .btn-success.active:hover, .btn-success:active.focus, .btn-success:active:focus, .btn-success:active:hover, .open>.dropdown-toggle.btn-success.focus, .open>.dropdown-toggle.btn-success:focus, .open>.dropdown-toggle.btn-success:hover {
+    border-color: $turquoise-light;
+    color: white;
+    background: $turquoise-dark;
     box-shadow: none;
+    outline: none;
 }
 
 .form-control:focus {
@@ -136,19 +164,19 @@ a:hover {
 .turquoise {
   color: $turquoise;
 }
-.light-blue {
-  color: $light-blue;
+.blue {
+  color: $blue;
 }
 .salmon {
   color: $salmon;
 }
 .gray {
-  color: $light-gray;
+  color: $gray;
 }
 
 .navbar-default {
-  background-color: $dark-crimson;
-  border-color: $crimson-border;
+  background-color: $crimson-dark;
+  border-color: $crimson-semi-dark;
 }
 
 .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
@@ -180,10 +208,6 @@ a:hover {
 
 .inline-block {
   display: inline-block;
-}
-
-.a-link:hover {
-  text-decoration: none;
 }
 
 .a-link {
