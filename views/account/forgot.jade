@@ -3,7 +3,8 @@ extends ../layout
 block content
   .col-sm-8.col-sm-offset-2
     form(method='POST')
-      legend Forgot Password
+      h3 Forgot Password
+      hr
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
         p Enter your email address below and we will send you password reset instructions.
@@ -13,4 +14,4 @@ block content
         button.btn.btn-primary(type='submit')
           i.fa.fa-key
           | Reset Password
-        a.btn.btn-link.pull-right.a-link(href='/login') Log In
+        a.btn.pull-right.a-link(href='/login') Log In
