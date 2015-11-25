@@ -28,6 +28,7 @@ var sass = require('node-sass-middleware');
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
+var sessionController = require('./controllers/session');
 
 /**
  * API keys and Passport configuration.
@@ -111,6 +112,8 @@ app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+app.get('/session/:shortCode', passportConf.isAuthenticated, sessionController.getSession);
+app.post('/session', passportConf.isAuthenticated, sessionController.postStartSession);
 
 /**
  * Error Handler.

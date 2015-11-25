@@ -1,23 +1,18 @@
 var mongoose = require('mongoose');
 
 var sessionSchema = new mongoose.Schema({
-  
+  user_id: { type: mongoose.Schema.ObjectId },
+  active: { type: Boolean },
+  shortCode: { type: String },
+  activeUsers: { type: Number }
 });
 
-/**
- * Password hash middleware.
- */
-userSchema.pre('save', function(next) {
-  var user = this;
-  if (!user.isModified('password')) return next();
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err) return next(err);
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return next(err);
-      user.password = hash;
-      next();
-    });
-  });
+var shortCodeOptions = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+sessionSchema.pre('save', function(next) {
+  var session = this;
+  if (session.shortCode) return next();
+  session.shortCode = Array(8).join().split(',').map(function() { return shortCodeOptions.charAt(Math.floor(Math.random() * shortCodeOptions.length)); }).join('');
+  next();
 });
 
 module.exports = mongoose.model('Session', sessionSchema);
