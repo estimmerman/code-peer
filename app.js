@@ -113,7 +113,8 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/session/:shortCode', passportConf.isAuthenticated, sessionController.getSession);
-app.post('/session', passportConf.isAuthenticated, sessionController.postStartSession);
+app.post('/session/start', passportConf.isAuthenticated, sessionController.postStartSession);
+app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
 
 /**
  * Error Handler.

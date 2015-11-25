@@ -1,4 +1,12 @@
-extends layout
+extends ../layout
 
 block content
 	h1 THIS IS A SESSION!
+	
+	.col-sm-12.m-top-15
+		form.form-horizontal(id='begin-session-form', action='/session/end', method='POST')
+			input(type='hidden', name='_csrf', value=_csrf)
+			input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
+			button.btn.btn-lg.btn-danger(type='submit')
+				i.fa.fa-share-alt
+				| End Session

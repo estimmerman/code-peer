@@ -4,7 +4,7 @@ block content
 	.col-sm-12.m-bottom-15(style='margin-top: 150px')
 		h1.text-center(style='font-size: 50px;') Start Collaborating Now
 	.col-sm-12.text-center.m-top-15
-		form.form-horizontal(id='begin-session-form', action='/session', method='POST')
+		form.form-horizontal(id='begin-session-form', action='/session/start', method='POST')
 			input(type='hidden', name='_csrf', value=_csrf)
 			button.btn.btn-lg.btn-primary(type='submit')
 				i.fa.fa-share-alt
