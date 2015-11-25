@@ -4,11 +4,11 @@
  */
 exports.index = function(req, res) {
 	if (req.user.role == 0) {
-		res.render('student_home', {
+		res.render('home/student_home', {
 		    title: 'Home'
 		});
 	} else {
-		res.render('tutor_home', {
+		res.render('home/tutor_home', {
 			title: 'Home'
 		});
 	}

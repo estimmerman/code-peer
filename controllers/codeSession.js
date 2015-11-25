@@ -15,7 +15,7 @@ exports.getSession = function(req, res) {
       codeSession.activeUsers += 1;
       codeSession.save(function(err) {
         if (err) return next(err);
-        res.render('session', {
+        return res.render('session', {
           title: 'Session',
           shortCode: req.params.shortCode,
           codeSession: codeSession
