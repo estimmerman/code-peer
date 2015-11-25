@@ -28,7 +28,7 @@ var sass = require('node-sass-middleware');
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
-var sessionController = require('./controllers/session');
+var sessionController = require('./controllers/codeSession');
 
 /**
  * API keys and Passport configuration.

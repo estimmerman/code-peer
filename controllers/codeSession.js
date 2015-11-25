@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var async = require('async');
-var Session = require('../models/Session');
+var CodeSession = require('../models/CodeSession');
 
 /**
  * GET /session/:shortCode
@@ -8,17 +8,17 @@ var Session = require('../models/Session');
  */
 exports.getSession = function(req, res) {
   if (req.user) return res.redirect('/');
-  var session = Session.findOne({ shortCode: req.params.shortCode }, function(err, session) {
+  var codeSession = CodeSession.findOne({ shortCode: req.params.shortCode }, function(err, codeSession) {
     if (err) return next(err);
-    if (session) {
-      session.active = true;
-      session.activeUsers += 1;
-      session.save(function(err) {
+    if (codeSession) {
+      codeSession.active = true;
+      codeSession.activeUsers += 1;
+      codeSession.save(function(err) {
         if (err) return next(err);
         res.render('session', {
           title: 'Session',
           shortCode: req.params.shortCode,
-          session: session
+          codeSession: codeSession
         });
       })
     } else {
@@ -33,20 +33,20 @@ exports.getSession = function(req, res) {
  * Create a session if one doesn't exist
  */
 exports.postStartSession = function(req, res, next) {
-  Session.findOne({ user_id: req.user._id }, function(err, session) {
+  CodeSession.findOne({ user_id: req.user._id }, function(err, codeSession) {
     if (err) return next(err);
-    if (session) {
-      return res.redirect('/session/' + session.shortCode);
+    if (codeSession) {
+      return res.redirect('/session/' + codeSession.shortCode);
     } else {
-      var session = new Session({
+      var codeSession = new CodeSession({
         user_id: req.user._id,
         active: false,
         activeUsers: 0
       });
 
-      session.save(function(err) {
+      codeSession.save(function(err) {
         if (err) return next(err);
-        return res.redirect('/session/' + session.shortCode);
+        return res.redirect('/session/' + codeSession.shortCode);
       })
     }
   });
