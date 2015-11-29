@@ -115,6 +115,7 @@ app.post('/account/delete', passportConf.isAuthenticated, userController.postDel
 app.get('/session/:shortCode', passportConf.isAuthenticated, sessionController.getSession);
 app.post('/session/start', passportConf.isAuthenticated, sessionController.postStartSession);
 app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
+app.post('/theme', passportConf.isAuthenticated, userController.postChangeTheme);
 
 /**
  * Error Handler.
