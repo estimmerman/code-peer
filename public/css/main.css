@@ -241,3 +241,23 @@ a:hover {
 .m-bottom-15 {
   margin-bottom: 15px;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.terminal-theme textarea {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+.blue-theme textarea {
+  background-color: #afe6f1;
+  border-color: #3cc2dd;
+  color: black;
+}
