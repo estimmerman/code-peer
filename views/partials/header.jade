@@ -26,6 +26,8 @@
                     input(type='hidden', name='theme', value='default')
                   a(href='#' onclick='$("#theme-form-default").submit()')
                     | Default
+                    if user.theme == 'default'
+                      i.fa.fa-check
                 li.divider
                 li
                   form.form-horizontal(id='theme-form-terminal', action='/theme', method='POST')
@@ -33,6 +35,8 @@
                     input(type='hidden', name='theme', value='terminal')
                   a(href='#' onclick='$("#theme-form-terminal").submit()')
                     | Terminal
+                    if user.theme == 'terminal'
+                      i.fa.fa-check
                 li.divider
                 li
                   form.form-horizontal(id='theme-form-blue', action='/theme', method='POST')
@@ -40,6 +44,8 @@
                     input(type='hidden', name='theme', value='blue')
                   a(href='#' onclick='$("#theme-form-blue").submit()')
                     | Blue
+                    if user.theme == 'blue'
+                      i.fa.fa-check
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
