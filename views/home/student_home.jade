@@ -8,4 +8,7 @@ block content
 			input(type='hidden', name='_csrf', value=_csrf)
 			button.btn.btn-lg.btn-primary(type='submit')
 				i.fa.fa-share-alt
-				| Begin Session
+				if activeSession
+					| Resume Session
+				else
+					| Begin Session
