@@ -1,28 +1,16 @@
 extends ../layout
+include ../mixins/session_list_item
 
 block content
 	.col-sm-12.m-bottom-15(style='margin-top: 50px')
 		h1.text-center(style='margin-bottom: 25px;') Join a Student Session
 		.session-list
+			if activeSession.length > 0
+				h3.text-center Your Active Session
+				+session_list(activeSession)
+				hr
 			if codeSessions.length > 0
-				each obj in codeSessions
-					.session-list-item
-						.col-sm-9.m-top-15
-							.col-sm-6
-								| #{obj.user.firstName} #{obj.user.lastName}
-								br
-								| #{obj.user.school}
-							.col-sm-6
-								i.fa.fa-user
-								| Active Users: #{obj.activeUsers.length}
-								p Session started #{obj.minutesStartedAgo} minutes ago
-
-						.col-sm-3.text-center
-							form.form-horizontal(id='begin-session-form', action='/session/#{obj.shortCode}', method='GET')
-								input(type='hidden', name='_csrf', value=_csrf)
-								button.btn.btn-primary.m-top-15.pull-right(type='submit')
-									i.fa.fa-sign-in
-									| Join Session
+				+session_list(codeSessions)
 			else
 				h3.text-center No Active Sessions
 			
