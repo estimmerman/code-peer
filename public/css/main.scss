@@ -218,6 +218,10 @@ a:hover {
   background-color: $crimson-dark;
 }
 
+.navbar-default .navbar-nav .dropdown-menu b {
+  color: black;
+}
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu>li>a {
     color: white;
@@ -284,5 +288,30 @@ a:hover {
     color: black;
   }
 }
+
+.session-list {
+  overflow: auto;
+}
+
+.session-list-item {
+  background-color: black;
+  border-color: $crimson-dark;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 4px;
+  min-height: 100px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.session-list-item:hover {
+  border-color: white;
+}
+
+
+
+
+
+
 
 

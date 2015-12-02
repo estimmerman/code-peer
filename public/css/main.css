@@ -205,6 +205,10 @@ a:hover {
   background-color: #5d091d;
 }
 
+.navbar-default .navbar-nav .dropdown-menu b {
+  color: black;
+}
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: white;
@@ -260,4 +264,23 @@ a:hover {
   background-color: #afe6f1;
   border-color: #3cc2dd;
   color: black;
+}
+
+.session-list {
+  overflow: auto;
+}
+
+.session-list-item {
+  background-color: black;
+  border-color: #5d091d;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 4px;
+  min-height: 100px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.session-list-item:hover {
+  border-color: white;
 }
