@@ -20,14 +20,30 @@ $(document).on('ready', function(){
 		}
 	});
 
+	// have enter key submit chat message
+	$(document).delegate('#chat-box', 'keydown', function(e){
+		var keyCode = e.keyCode || e.which;
+		if (keyCode == 13) {
+			e.preventDefault();
+			$('#chat-button').click();
+		}
+	});
+
 	var socket = io.connect();
 	socket.on('update-chat', function(msg) {
-		console.log('Message received in chat: ' + msg);
+		updateChat(msg);
 	});
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
 		socket.emit('send-chat-message', chatBox.val());
+		// update the sender's chat box immediately, since there's
+		// no need to wait for the server to respond (makes it look faster)
+		updateChat(chatBox.val());
 		chatBox.val('');
 	})
+
+	var updateChat = function(msg) {
+		$('#chat').append('<p>' + msg + '</p>');
+	}
 });

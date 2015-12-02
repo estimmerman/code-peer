@@ -139,7 +139,6 @@ server.listen(app.get('port'), function() {
 io.on('connection', function(socket) {
   console.log('Socket connected');
   socket.on('send-chat-message', function(msg) {
-    console.log('Message sent to server: ' + msg);
     socket.broadcast.emit('update-chat', msg);
   });
   socket.on('disconnect', function() {
