@@ -1,13 +1,8 @@
 var _ = require('lodash');
 var async = require('async');
 var CodeSession = require('../models/CodeSession');
+var helpers = require('../helpers/helpers');
 
-var getIdIndexInArray = function(id, arr) {
-  for (var i = 0; i < arr.length; i++) {
-    if (id.toString() == arr[i].toString()) return i;
-  }
-  return -1;
-}
 /**
  * GET /session/:shortCode
  * Session page.
@@ -16,7 +11,7 @@ exports.getSession = function(req, res) {
   CodeSession.findOne({ shortCode: req.params.shortCode }, function(err, codeSession) {
     if (err) return next(err);
     if (codeSession) {
-      if (codeSession.activeUsers.length >= 2 && getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1) {
+      if (codeSession.activeUsers.length >= 2 && helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1) {
         req.flash('errors', {msg: 'This session is full!'});
         return res.redirect('/');
       }
@@ -27,7 +22,7 @@ exports.getSession = function(req, res) {
           codeSession.lastStartTime = new Date();
         }
         codeSession.active = true;
-        if (getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
+        if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
           codeSession.activeUsers.push(req.user._id);
         }
         codeSession.save(function(err) {
@@ -48,7 +43,7 @@ exports.getSession = function(req, res) {
           req.flash('errors', {msg: 'This student is not currently in a session.'});
           return res.redirect('/');
         }
-        if (getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
+        if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
           codeSession.activeUsers.push(req.user._id);
           codeSession.save(function(err) {
             if (err) return next(err);
@@ -137,7 +132,7 @@ exports.postLeaveSession = function(req, res, next) {
         req.flash('errors', {msg: 'Weird, you should be ending the session, not leaving it.'});
         return res.redirect('/');
       }
-      var idIndex = getIdIndexInArray(req.user._id, codeSession.activeUsers);
+      var idIndex = helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers);
       if (idIndex != -1){
         codeSession.activeUsers.splice(idIndex, 1);
       } else {
