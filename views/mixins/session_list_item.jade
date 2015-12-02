@@ -9,7 +9,10 @@ mixin session_list(codeSessions)
 				.col-sm-6
 					i.fa.fa-user
 					| Active Users: #{obj.activeUsers.length}
-					p Session started #{obj.minutesStartedAgo} minutes ago
+					if obj.minutesStartedAgo == 1
+						p Session started #{obj.minutesStartedAgo} minute ago
+					else
+						p Session started #{obj.minutesStartedAgo} minutes ago
 
 			.col-sm-3.text-center
 				form.form-horizontal(id='begin-session-form', action='/session/#{obj.shortCode}	', method='GET')
