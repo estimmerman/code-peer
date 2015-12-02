@@ -380,3 +380,35 @@ exports.postChangeTheme = function(req, res, next) {
     });
   });
 }
+
+exports.postChangeFilterFull = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+    var filters = user.filterSettings;
+    filters.showFull = !filters.showFull;
+    user.filterSettings = filters;
+    user.markModified('filterSettings');
+    user.save(function(err) {
+      if (err) return next(err);
+      res.redirect('back');
+    });
+  });
+}
+
+exports.postChangeFilterTime = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+    var filters = user.filterSettings;
+    filters.timeOrder = req.body.time;
+    user.filterSettings = filters;
+    user.markModified('filterSettings');
+    user.save(function(err) {
+      if (err) return next(err);
+      res.redirect('back');
+    });
+  });
+}
+
+
+
+

@@ -5,8 +5,10 @@ var CodeSession = require('../models/CodeSession');
  * Home page.
  */
 exports.index = function(req, res) {
+	res.locals.path = req.path;
+	// student accessing home portal
 	if (req.user.role == 0) {
-		var codeSession = CodeSession.findOne({ user_id: req.user._id }, function(err, codeSession) {
+		CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
 		    if (err) return next(err);
 		    if (codeSession) {
 		    	res.render('home/student_home', {
@@ -20,9 +22,41 @@ exports.index = function(req, res) {
 				});
 		    }
 		});
+	// tutor accessing home portal
 	} else {
-		res.render('home/tutor_home', {
-			title: 'Home'
+		var queryFilters = {
+			'activeUsers': 'this.activeUsers',
+			'timeOrder': null
+		};
+		var userFilters = req.user.filterSettings;
+		if (!userFilters.showFull) {
+			queryFilters.activeUsers = 'this.activeUsers.length < 2';
+		}
+		if (userFilters.timeOrder == 'new') {
+			queryFilters.timeOrder = 'desc';
+		} else {
+			queryFilters.timeOrder = 'asc';
+		}
+		CodeSession.find({ active: true, $where: queryFilters.activeUsers })
+		.populate('user', 'firstName lastName school')
+		.sort({lastStartTime: queryFilters.timeOrder})
+		.exec(function (err, codeSessions) {
+			if (err) return next(err);
+
+			codeSessions.forEach(function (session) {
+				if (session.lastStartTime) {
+					var diff = Math.abs(new Date() - session.lastStartTime);
+					var minutes = Math.floor((diff/1000)/60);
+					session.minutesStartedAgo = minutes;
+				} else {
+					session.minutesStartedAgo = "an unknown number of";
+				}
+			});
+
+			res.render('home/tutor_home', {
+				title: 'Home',
+				codeSessions: codeSessions
+			});
 		});
 	}
 };

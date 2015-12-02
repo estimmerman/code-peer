@@ -13,7 +13,7 @@
       ul.nav.navbar-nav
         li(class=title=='Home'?'active':undefined)
           a(href='/') Home
-      if codeSession && codeSession.shortCode
+      if user && codeSession && codeSession.shortCode
         ul.nav.navbar-nav
           li.dropdown(class=title=='Theme'?'active':undefined)
               a.dropdown-toggle(href='#', data-toggle='dropdown')
@@ -27,7 +27,7 @@
                   a(href='#' onclick='$("#theme-form-default").submit()')
                     | Default
                     if user.theme == 'default'
-                      i.fa.fa-check
+                      i.fa.fa-check.pull-right
                 li.divider
                 li
                   form.form-horizontal(id='theme-form-terminal', action='/theme', method='POST')
@@ -36,7 +36,7 @@
                   a(href='#' onclick='$("#theme-form-terminal").submit()')
                     | Terminal
                     if user.theme == 'terminal'
-                      i.fa.fa-check
+                      i.fa.fa-check.pull-right
                 li.divider
                 li
                   form.form-horizontal(id='theme-form-blue', action='/theme', method='POST')
@@ -45,7 +45,40 @@
                   a(href='#' onclick='$("#theme-form-blue").submit()')
                     | Blue
                     if user.theme == 'blue'
-                      i.fa.fa-check
+                      i.fa.fa-check.pull-right
+      if user && user.role == 1 && path == '/home'
+        ul.nav.navbar-nav
+          li.dropdown(class=title=='Filters'?'active':undefined)
+              a.dropdown-toggle(href='#', data-toggle='dropdown')
+                | Filter
+                i.caret
+              ul.dropdown-menu(style='min-width: 210px;')
+                li
+                  form.form-horizontal(id='filter-form-show-full', action='/filter/full', method='POST')
+                    input(type='hidden', name='_csrf', value=_csrf)
+                  a(href='#' onclick='$("#filter-form-show-full").submit()')
+                    | Show Full Sessions
+                    if user.filterSettings.showFull
+                      i.fa.fa-check.pull-right(style='margin-top: 3px;')
+                li.divider
+                .text-center
+                  b Time Started
+                li
+                  form.form-horizontal(id='filter-form-newest-first', action='/filter/time', method='POST')
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    input(type='hidden', name='time', value='new')
+                  a(href='#' onclick='$("#filter-form-newest-first").submit()')
+                    | Newest First
+                    if user.filterSettings.timeOrder == 'new'
+                      i.fa.fa-check.pull-right(style='margin-top: 3px;')
+                li
+                  form.form-horizontal(id='filter-form-oldest-first', action='/filter/time', method='POST')
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    input(type='hidden', name='time', value='old')
+                  a(href='#' onclick='$("#filter-form-oldest-first").submit()')
+                    | Oldest First
+                    if user.filterSettings.timeOrder == 'old'
+                      i.fa.fa-check.pull-right(style='margin-top: 3px;')
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
