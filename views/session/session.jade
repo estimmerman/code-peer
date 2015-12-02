@@ -26,11 +26,8 @@ block content
 			.col-sm-12
 				textarea.form-control(type='text', name='chat', id='chat', style='height: 700px; width: 100%;')
 			.col-sm-12.m-top-15
-				form.form-horizontal(id='chat-form', action='/chat/send', method='POST')
-						input(type='hidden', name='_csrf', value=_csrf)
-						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
-						button.btn.btn-lg.btn-danger.full-width(type='submit')
-							i.fa.fa-commenting
-							| Send
+				button.btn.btn-lg.btn-danger.full-width(id='chat-button')
+					i.fa.fa-commenting
+					| Send
 
 	script(src='/js/session_page.js')

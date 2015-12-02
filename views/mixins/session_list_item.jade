@@ -15,8 +15,6 @@ mixin session_list(codeSessions)
 						p Session started #{obj.minutesStartedAgo} minutes ago
 
 			.col-sm-3.text-center
-				form.form-horizontal(id='begin-session-form', action='/session/#{obj.shortCode}	', method='GET')
-					input(type='hidden', name='_csrf', value=_csrf)
-					button.btn.btn-primary.m-top-15.pull-right(type='submit')
-						i.fa.fa-sign-in
-						| Join Session
+				a.btn.btn-primary.m-top-15.pull-right(href='/session/#{obj.shortCode}')
+					i.fa.fa-sign-in
+					| Join Session

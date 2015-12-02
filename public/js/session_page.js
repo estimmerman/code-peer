@@ -17,4 +17,10 @@ $(document).on('ready', function(){
 			$(this).get(0).selectionStart = $(this).get(0).selectionEnd = start + 1;
 		}
 	});
+
+	var socket = io.connect();
+
+	$('#chat-button').on('click', function(){
+		socket.emit('send-chat-message', { message: $('body') });
+	})
 });

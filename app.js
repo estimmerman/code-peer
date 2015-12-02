@@ -11,7 +11,6 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
 var methodOverride = require('method-override');
-
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('express-flash');
@@ -40,6 +39,8 @@ var passportConf = require('./config/passport');
  * Create Express server.
  */
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 /**
  * Connect to MongoDB.
@@ -128,8 +129,21 @@ app.use(errorHandler());
 /**
  * Start Express server.
  */
-app.listen(app.get('port'), function() {
+server.listen(app.get('port'), function() {
   console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+});
+
+/**
+ * Initialize socket.io server
+ */
+io.on('connection', function(socket) {
+  console.log('Socket connected');
+  socket.on('send-chat-message', function(data) {
+    console.log(data);
+  });
+  socket.on('disconnect', function() {
+    console.log('Socket disconnected');
+  });
 });
 
 module.exports = app;
