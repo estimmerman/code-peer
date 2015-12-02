@@ -14,7 +14,7 @@ var userSchema = new mongoose.Schema({
   // courses: { type: Array, require: false, default: [] },
 
   theme: { type: String, require: true, default: 'default' },
-  filterSettings: { type: Object, default: {'showFull' : false} },
+  filterSettings: { type: Object, default: {'showFull' : false, 'timeOrder' : 'new'} },
 
   email: { type: String, require: true, unique: true, lowercase: true },
   password: { type: String, require: true},

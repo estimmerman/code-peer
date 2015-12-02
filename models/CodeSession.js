@@ -4,7 +4,7 @@ var codeSessionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.ObjectId, ref: 'User' },
   active: { type: Boolean, default: false },
   shortCode: { type: String },
-  activeUsers: { type: Array, default: [] },
+  activeUsers: { type: [mongoose.Schema.ObjectId], default: [] },
   lastStartTime: { type: Date, default: null }
 });
 
