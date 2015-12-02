@@ -115,7 +115,10 @@ app.post('/account/delete', passportConf.isAuthenticated, userController.postDel
 app.get('/session/:shortCode', passportConf.isAuthenticated, sessionController.getSession);
 app.post('/session/start', passportConf.isAuthenticated, sessionController.postStartSession);
 app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
+app.post('/session/leave', passportConf.isAuthenticated, sessionController.postLeaveSession);
 app.post('/theme', passportConf.isAuthenticated, userController.postChangeTheme);
+app.post('/filter/full', passportConf.isAuthenticated, userController.postChangeFilterFull);
+app.post('/filter/time', passportConf.isAuthenticated, userController.postChangeFilterTime);
 
 /**
  * Error Handler.
