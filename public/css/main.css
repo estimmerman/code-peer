@@ -234,16 +234,32 @@ a:hover {
   margin-right: 15px;
 }
 
+.m-right-5 {
+  margin-right: 5px;
+}
+
 .m-left-15 {
   margin-left: 15px;
+}
+
+.m-left-5 {
+  margin-left: 5px;
 }
 
 .m-top-15 {
   margin-top: 15px;
 }
 
+.m-top-5 {
+  margin-top: 5px;
+}
+
 .m-bottom-15 {
   margin-bottom: 15px;
+}
+
+.m-bottom-5 {
+  margin-bottom: 5px;
 }
 
 .full-width {

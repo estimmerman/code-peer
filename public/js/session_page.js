@@ -2,9 +2,11 @@ $(document).on('ready', function(){
 	var headerHeight = $('.navbar').height();
 	var footerHeight = $('footer').height();
 	var bottomPadding = 75;
-	var textareaHeight = $(window).height() - headerHeight - footerHeight - bottomPadding;
-	$('#code').css('height', textareaHeight);
-	$('#chat').css('height', textareaHeight);
+	var codeAreaHeight = $(window).height() - headerHeight - footerHeight - bottomPadding;
+	var margin = 20;
+	var chatAreaHeight = codeAreaHeight - $('#chat-box').height() - margin;
+	$('#code').css('height', codeAreaHeight);
+	$('#chat').css('height', chatAreaHeight);
 
 	// allow tab character in the code textarea
 	$(document).delegate('#code', 'keydown', function(e){
@@ -19,8 +21,13 @@ $(document).on('ready', function(){
 	});
 
 	var socket = io.connect();
+	socket.on('update-chat', function(msg) {
+		console.log('Message received in chat: ' + msg);
+	});
 
 	$('#chat-button').on('click', function(){
-		socket.emit('send-chat-message', { message: $('body') });
+		var chatBox = $('#chat-box');
+		socket.emit('send-chat-message', chatBox.val());
+		chatBox.val('');
 	})
 });
