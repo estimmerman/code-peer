@@ -7,17 +7,30 @@ block content
 				label.control-label(for='code') Start coding here!
 			.col-sm-12
 				textarea.form-control(type='text', name='code', id='code', style='height: 700px; width: 100%;')
+			.col-sm-12.m-top-15
+				if isStudent
+					form.form-horizontal(id='end-session-form', action='/session/end', method='POST')
+						input(type='hidden', name='_csrf', value=_csrf)
+						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
+						button.btn.btn-lg.btn-danger.full-width(type='submit')
+							| End Session
+				else
+					form.form-horizontal(id='leave-session-form', action='/session/leave', method='POST')
+						input(type='hidden', name='_csrf', value=_csrf)
+						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
+						button.btn.btn-lg.btn-danger.full-width(type='submit')
+							| Leave Session
 		.col-sm-3
 			.col-sm-12
 				label.control-label(for='chat') Chat
 			.col-sm-12
 				textarea.form-control(type='text', name='chat', id='chat', style='height: 700px; width: 100%;')
 			.col-sm-12.m-top-15
-				form.form-horizontal(id='begin-session-form', action='/session/end', method='POST')
-					input(type='hidden', name='_csrf', value=_csrf)
-					input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
-					button.btn.btn-lg.btn-danger.full-width(type='submit')
-						i.fa.fa-share-alt
-						| End Session
+				form.form-horizontal(id='chat-form', action='/chat/send', method='POST')
+						input(type='hidden', name='_csrf', value=_csrf)
+						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
+						button.btn.btn-lg.btn-danger.full-width(type='submit')
+							i.fa.fa-commenting
+							| Send
 
 	script(src='/js/session_page.js')
