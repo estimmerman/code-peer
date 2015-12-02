@@ -9,7 +9,7 @@ exports.index = function(req, res) {
 	res.locals.path = req.path;
 	// student accessing home portal
 	if (req.user.role == 0) {
-		CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
+		CodeSession.findOne({ user: req.user._id }, function (err, codeSession) {
 		    if (err) return next(err);
 		    if (codeSession) {
 		    	res.render('home/student_home', {
@@ -25,13 +25,14 @@ exports.index = function(req, res) {
 		});
 	// tutor accessing home portal
 	} else {
-		CodeSession.find({ activeUsers: req.user.id })
+		// see if tutor already has an active session
+		CodeSession.findOne({ activeUsers: req.user.id })
 		.populate('user', 'firstName lastName school')
 		.exec(function (err, ownSession){
 			if (err) return next(err);
 			var activeSession = [];
-			if (ownSession.length > 0) {
-				activeSession.push(ownSession[0]);
+			if (ownSession) {
+				activeSession.push(ownSession);
 				activeSession[0].minutesStartedAgo = helpers.getMinutesFromSessionStart(activeSession[0]);
 			}
 

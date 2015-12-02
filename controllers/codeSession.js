@@ -39,27 +39,35 @@ exports.getSession = function(req, res) {
         return res.redirect('/');
         // tutor trying to join session
       } else {
-        if (!codeSession.active) {
-          req.flash('errors', {msg: 'This student is not currently in a session.'});
-          return res.redirect('/');
-        }
-        if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
-          codeSession.activeUsers.push(req.user._id);
-          codeSession.save(function(err) {
-            if (err) return next(err);
+        CodeSession.findOne({ activeUsers: req.user.id }, function (err, activeSession) {
+          if (err) return next(err);
+          if (activeSession && codeSession.shortCode != activeSession.shortCode) {
+            req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
+            return res.redirect('back');
+          }
+
+          if (!codeSession.active) {
+            req.flash('errors', {msg: 'This student is not currently in a session.'});
+            return res.redirect('/');
+          }
+          if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
+            codeSession.activeUsers.push(req.user._id);
+            codeSession.save(function(err) {
+              if (err) return next(err);
+              return res.render('session/session', {
+                title: 'Session',
+                codeSession: codeSession,
+                isStudent: false
+              });
+            })
+          } else {
             return res.render('session/session', {
               title: 'Session',
               codeSession: codeSession,
               isStudent: false
             });
-          })
-        } else {
-          return res.render('session/session', {
-            title: 'Session',
-            codeSession: codeSession,
-            isStudent: false
-          });
-        }
+          }
+        });
       }
     } else {
       req.flash('errors', {msg: 'Could not find session.'});
