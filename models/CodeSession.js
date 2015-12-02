@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 
 var codeSessionSchema = new mongoose.Schema({
-  user_id: { type: mongoose.Schema.ObjectId },
+  user: { type: mongoose.Schema.ObjectId, ref: 'User' },
   active: { type: Boolean, default: false },
   shortCode: { type: String },
-  activeUsers: { type: Array, default: [] }
+  activeUsers: { type: Array, default: [] },
+  lastStartTime: { type: Date, default: null }
 });
 
 var shortCodeOptions = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

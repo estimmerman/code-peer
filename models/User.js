@@ -14,9 +14,10 @@ var userSchema = new mongoose.Schema({
   // courses: { type: Array, require: false, default: [] },
 
   theme: { type: String, require: true, default: 'default' },
+  filterSettings: { type: Object, default: {'showFull' : false} },
 
   email: { type: String, require: true, unique: true, lowercase: true },
-  password: { type:String, require: true},
+  password: { type: String, require: true},
 
   tokens: Array,
   resetPasswordToken: String,
