@@ -51,7 +51,8 @@ $(document).on('ready', function(){
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
-		socket.emit('send-chat-message', chatBox.val());
+		if (chatBox.val().trim() == '') return;
+		socket.emit('send-chat-message', chatBox.val().trim());
 		// update the sender's chat box immediately, since there's
 		// no need to wait for the server to respond (makes it look faster)
 		updateChat('<span style="color: ' + socketAttrs.color + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
@@ -59,6 +60,8 @@ $(document).on('ready', function(){
 	})
 
 	var updateChat = function(msg) {
-		$('#chat').append('<p>' + msg + '</p>');
+		chat = $('#chat');
+		chat.append('<p>' + msg + '</p>');
+		chat.scrollTop(chat.prop("scrollHeight"));
 	}
 });
