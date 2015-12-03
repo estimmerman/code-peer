@@ -139,9 +139,14 @@ server.listen(app.get('port'), function() {
 io.on('connection', function(socket) {
   console.log('Socket connected');
   socket.on('send-chat-message', function(msg) {
-    socket.broadcast.emit('update-chat', msg);
+    socket.broadcast.emit('update-chat', socket.name, msg);
+  });
+  socket.on('set-name', function(name) {
+    socket.name = name;
+    socket.broadcast.emit('user-connected', name); 
   });
   socket.on('disconnect', function() {
+    socket.broadcast.emit('user-disconnected', socket.name);
     console.log('Socket disconnected');
   });
 });

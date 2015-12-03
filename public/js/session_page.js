@@ -30,16 +30,23 @@ $(document).on('ready', function(){
 	});
 
 	var socket = io.connect();
-	socket.on('update-chat', function(msg) {
-		updateChat(msg);
+	socket.on('update-chat', function(user, msg) {
+		updateChat(user + ": " + msg);
 	});
+	socket.on('user-connected', function(name) {
+		updateChat(name + ' has connected to the session.');
+	});
+	socket.on('user-disconnected', function(name) {
+		updateChat(name + ' has left the session.');
+	});
+	socket.emit('set-name', user.firstName);
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
 		socket.emit('send-chat-message', chatBox.val());
 		// update the sender's chat box immediately, since there's
 		// no need to wait for the server to respond (makes it look faster)
-		updateChat(chatBox.val());
+		updateChat(user.firstName + ": " + chatBox.val());
 		chatBox.val('');
 	})
 

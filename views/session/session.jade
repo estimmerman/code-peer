@@ -31,5 +31,6 @@ block content
 				button.btn.btn-lg.btn-danger.full-width(id='chat-button')
 					i.fa.fa-commenting
 					| Send
-
+	script(type='text/javascript').
+		var user = !{JSON.stringify(user)}; 
 	script(src='/js/session_page.js')
