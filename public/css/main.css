@@ -273,6 +273,9 @@ a:hover {
 .default-theme #chat {
   background-color: white;
   border-color: #ccc;
+}
+
+.default-theme #chat p {
   color: black;
 }
 
@@ -285,6 +288,9 @@ a:hover {
 .terminal-theme #chat {
   background-color: black;
   border-color: black;
+}
+
+.terminal-theme #chat p {
   color: white;
 }
 
@@ -297,6 +303,9 @@ a:hover {
 .blue-theme #chat {
   background-color: #afe6f1;
   border-color: #3cc2dd;
+}
+
+.blue-theme #chat p {
   color: black;
 }
 

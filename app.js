@@ -141,21 +141,25 @@ server.listen(app.get('port'), function() {
 io.on('connection', function(socket) {
   console.log('Socket connected');
   socket.on('send-chat-message', function(msg) {
-    socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.color, msg);
+    socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.colors, msg);
   });
-  socket.on('set-user', function(name, shortCode) {
+  socket.on('set-user', function(name, theme, shortCode) {
     socket.join(shortCode);
     var rooms = io.sockets.adapter.rooms;
     socket.name = name;
     socket.shortCode = shortCode;
     
-    socket.color = helpers.getUsernameColor(socket.name, constants.NAME_COLORS);
+    socket.colors = {
+      'default': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_DEFAULT),
+      'terminal': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_TERMINAL),
+      'blue': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_BLUE)
+    }
 
-    socket.emit('user-set', socket.name, socket.color);
-    socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.color); 
+    socket.emit('user-set', socket.name, socket.colors);
+    socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
   });
   socket.on('disconnect', function() {
-    socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.color);
+    socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
     console.log('Socket disconnected');
   });
 });

@@ -31,23 +31,23 @@ $(document).on('ready', function(){
 
 	var socketAttrs = {
 		name: null,
-		color: null
+		colors: {}
 	}
 	var socket = io.connect();
-	socket.on('update-chat', function(name, color, msg) {
-		updateChat('<span style="color: ' + color + '">' + name + '</span>: ' + msg);
+	socket.on('update-chat', function(name, colors, msg) {
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span>: ' + msg);
 	});
-	socket.on('user-connected', function(name, color) {
-		updateChat('<span style="color: ' + color + '">' + name + '</span> has connected to the session.');
+	socket.on('user-connected', function(name, colors) {
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.');
 	});
-	socket.on('user-disconnected', function(name, color) {
-		updateChat('<span style="color: ' + color + '">' + name + '</span> has left the session.');
+	socket.on('user-disconnected', function(name, colors) {
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.');
 	});
-	socket.on('user-set', function(name, color) {
+	socket.on('user-set', function(name, colors) {
 		socketAttrs.name = name;
-		socketAttrs.color = color;
+		socketAttrs.colors = colors;
 	});
-	socket.emit('set-user', user.firstName, session.shortCode);
+	socket.emit('set-user', user.firstName, user.theme, session.shortCode);
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
@@ -55,7 +55,7 @@ $(document).on('ready', function(){
 		socket.emit('send-chat-message', chatBox.val().trim());
 		// update the sender's chat box immediately, since there's
 		// no need to wait for the server to respond (makes it look faster)
-		updateChat('<span style="color: ' + socketAttrs.color + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
+		updateChat('<span style="color: ' + getColorOffTheme(socketAttrs.colors) + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
 		chatBox.val('');
 	})
 
@@ -63,5 +63,18 @@ $(document).on('ready', function(){
 		chat = $('#chat');
 		chat.append('<p>' + msg + '</p>');
 		chat.scrollTop(chat.prop("scrollHeight"));
+	}
+
+	var getColorOffTheme = function(colors) {
+		switch(user.theme) {
+			case 'default':
+				return colors.default;
+			case 'terminal':
+				return colors.terminal;
+			case 'blue':
+				return colors.blue;
+			default:
+				return colors.default;
+		}
 	}
 });

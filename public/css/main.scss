@@ -292,6 +292,9 @@ a:hover {
   #chat {
     background-color: white;
     border-color: #ccc;
+  }
+
+  #chat p {
     color: black;
   }
 }
@@ -306,6 +309,9 @@ a:hover {
   #chat {
     background-color: black;
     border-color: black;
+  }
+
+  #chat p {
     color: white;
   }
 }
@@ -320,6 +326,9 @@ a:hover {
   #chat {
     background-color: $blue-light;
     border-color: $blue-dark;
+  }
+
+  #chat p {
     color: black;
   }
 }
