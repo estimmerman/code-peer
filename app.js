@@ -20,6 +20,8 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 
+var helpers = require('./helpers/helpers');
+var constants = require('./helpers/constants');
 
 /**
  * Controllers (route handlers).
@@ -139,14 +141,21 @@ server.listen(app.get('port'), function() {
 io.on('connection', function(socket) {
   console.log('Socket connected');
   socket.on('send-chat-message', function(msg) {
-    socket.broadcast.emit('update-chat', socket.name, msg);
+    socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.color, msg);
   });
-  socket.on('set-name', function(name) {
+  socket.on('set-user', function(name, shortCode) {
+    socket.join(shortCode);
+    var rooms = io.sockets.adapter.rooms;
     socket.name = name;
-    socket.broadcast.emit('user-connected', name); 
+    socket.shortCode = shortCode;
+    
+    socket.color = helpers.getUsernameColor(socket.name, constants.NAME_COLORS);
+
+    socket.emit('user-set', socket.name, socket.color);
+    socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.color); 
   });
   socket.on('disconnect', function() {
-    socket.broadcast.emit('user-disconnected', socket.name);
+    socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.color);
     console.log('Socket disconnected');
   });
 });

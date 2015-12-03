@@ -29,24 +29,32 @@ $(document).on('ready', function(){
 		}
 	});
 
+	var socketAttrs = {
+		name: null,
+		color: null
+	}
 	var socket = io.connect();
-	socket.on('update-chat', function(user, msg) {
-		updateChat(user + ": " + msg);
+	socket.on('update-chat', function(name, color, msg) {
+		updateChat('<span style="color: ' + color + '">' + name + '</span>: ' + msg);
 	});
-	socket.on('user-connected', function(name) {
-		updateChat(name + ' has connected to the session.');
+	socket.on('user-connected', function(name, color) {
+		updateChat('<span style="color: ' + color + '">' + name + '</span> has connected to the session.');
 	});
-	socket.on('user-disconnected', function(name) {
-		updateChat(name + ' has left the session.');
+	socket.on('user-disconnected', function(name, color) {
+		updateChat('<span style="color: ' + color + '">' + name + '</span> has left the session.');
 	});
-	socket.emit('set-name', user.firstName);
+	socket.on('user-set', function(name, color) {
+		socketAttrs.name = name;
+		socketAttrs.color = color;
+	});
+	socket.emit('set-user', user.firstName, session.shortCode);
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
 		socket.emit('send-chat-message', chatBox.val());
 		// update the sender's chat box immediately, since there's
 		// no need to wait for the server to respond (makes it look faster)
-		updateChat(user.firstName + ": " + chatBox.val());
+		updateChat('<span style="color: ' + socketAttrs.color + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
 		chatBox.val('');
 	})
 

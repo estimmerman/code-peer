@@ -32,5 +32,6 @@ block content
 					i.fa.fa-commenting
 					| Send
 	script(type='text/javascript').
-		var user = !{JSON.stringify(user)}; 
+		var user = !{JSON.stringify(user)};
+		var session = !{JSON.stringify(codeSession)};
 	script(src='/js/session_page.js')

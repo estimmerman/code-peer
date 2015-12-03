@@ -16,3 +16,14 @@ exports.getMinutesFromSessionStart = function(session) {
 	}
 	return min;
 }
+
+exports.getUsernameColor = function(username, colors) {
+	// Compute hash code
+	var hash = 7;
+	for (var i = 0; i < username.length; i++) {
+	   hash = username.charCodeAt(i) + (hash << 5) - hash;
+	}
+	// Calculate color
+	var index = Math.abs(hash % colors.length);
+	return colors[index];
+}
