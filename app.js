@@ -19,6 +19,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
+var request = require('request');
 
 var helpers = require('./helpers/helpers');
 var constants = require('./helpers/constants');
@@ -116,7 +117,9 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/session/:shortCode', passportConf.isAuthenticated, sessionController.getSession);
+app.post('/session/connect', passportConf.isAuthenticated, sessionController.postConnectToSession);
 app.post('/session/start', passportConf.isAuthenticated, sessionController.postStartSession);
+app.post('/session/forceLeave', passportConf.isAuthenticated, sessionController.postForceLeaveSession);
 app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
 app.post('/session/leave', passportConf.isAuthenticated, sessionController.postLeaveSession);
 app.post('/theme', passportConf.isAuthenticated, userController.postChangeTheme);
@@ -143,12 +146,14 @@ io.on('connection', function(socket) {
   socket.on('send-chat-message', function(msg) {
     socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.colors, msg);
   });
-  socket.on('set-user', function(name, theme, shortCode) {
+  socket.on('set-user', function(user_id, name, shortCode, sessionOwner) {
     socket.join(shortCode);
     var rooms = io.sockets.adapter.rooms;
+    socket.user_id = user_id;
+    socket.owner_id = sessionOwner;
     socket.name = name;
     socket.shortCode = shortCode;
-    
+
     socket.colors = {
       'default': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_DEFAULT),
       'terminal': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_TERMINAL),
@@ -159,6 +164,10 @@ io.on('connection', function(socket) {
     socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
   });
   socket.on('disconnect', function() {
+    // remove active user from session
+    if (socket.user_id == socket.owner_id) {
+      socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
+    }
     socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
     console.log('Socket disconnected');
   });

@@ -16,23 +16,12 @@ exports.getSession = function(req, res) {
         return res.redirect('/');
       }
       // student is beginning his own session
-      if (req.user._id.toString() == codeSession.user.toString()) {
-        // only update start time if not resuming session
-        if (!codeSession.active){
-          codeSession.lastStartTime = new Date();
-        }
-        codeSession.active = true;
-        if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
-          codeSession.activeUsers.push(req.user._id);
-        }
-        codeSession.save(function(err) {
-          if (err) return next(err);
-          return res.render('session/session', {
-            title: 'Session',
-            codeSession: codeSession,
-            isStudent: true
-          });
-        })
+      if (req.user.id.toString() == codeSession.user.toString()) {
+        return res.render('session/session', {
+          title: 'Session',
+          codeSession: codeSession,
+          isStudent: true
+        });
         // another student trying to access session shouldn't be allowed
       } else if (req.user.role == 0) {
         req.flash('errors', {msg: 'You must be a tutor to join this session!'});
@@ -50,23 +39,11 @@ exports.getSession = function(req, res) {
             req.flash('errors', {msg: 'This student is not currently in a session.'});
             return res.redirect('/');
           }
-          if (helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1){
-            codeSession.activeUsers.push(req.user._id);
-            codeSession.save(function(err) {
-              if (err) return next(err);
-              return res.render('session/session', {
-                title: 'Session',
-                codeSession: codeSession,
-                isStudent: false
-              });
-            })
-          } else {
-            return res.render('session/session', {
-              title: 'Session',
-              codeSession: codeSession,
-              isStudent: false
-            });
-          }
+          return res.render('session/session', {
+            title: 'Session',
+            codeSession: codeSession,
+            isStudent: false
+          });
         });
       }
     } else {
@@ -127,10 +104,34 @@ exports.postEndSession = function(req, res, next) {
   });
 }
 
+exports.postForceLeaveSession = function(req, res, next) {
+  CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
+    if (err) return;
+    if (codeSession) {
+      var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
+      if (idIndex != -1) {
+        codeSession.activeUsers.splice(idIndex, 1);
+      }
+      // deactive session if no active users left, or if owner leaves sessions
+      if (codeSession.user.toString() == req.user.id.toString() || codeSession.activeUsers.length == 0) {
+        codeSession.active = false;
+      }
+      codeSession.save(function(err) {
+        if (err) return;
+        req.flash('errors', { msg: 'The owner has ended the session.' });
+        return res.redirect('/');
+      });
+    } else {
+      req.flash('errors', {msg: 'The owner has ended session.'});
+      return res.redirect('/');
+    }
+  });
+}
+
 /**
  * POST /session/leave
  * Params: shortCode
- * Ends current session
+ * Leaves current session
 */
 exports.postLeaveSession = function(req, res, next) {
   CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
@@ -140,7 +141,7 @@ exports.postLeaveSession = function(req, res, next) {
         req.flash('errors', {msg: 'Weird, you should be ending the session, not leaving it.'});
         return res.redirect('/');
       }
-      var idIndex = helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers);
+      var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
       if (idIndex != -1){
         codeSession.activeUsers.splice(idIndex, 1);
       } else {
@@ -159,3 +160,72 @@ exports.postLeaveSession = function(req, res, next) {
   });
 }
 
+/**
+ * POST /session/connect:shortCode
+ * Params: shortCode
+ * Activates session and adds users to activeUsers once a socket.io connection is made
+ * Double checks the conditions made before getSession
+*/
+exports.postConnectToSession = function(req, res, next) {
+  CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
+    if (err) return next(err);
+    if (codeSession) {
+      var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
+      if (codeSession.activeUsers.length >= 2 && idIndex == -1) {
+        req.flash('errors', {msg: 'This session is full!'});
+        return res.redirect('/');
+      }
+
+      if (req.user.id.toString() == codeSession.user.toString()) {
+        if (idIndex == -1){
+          codeSession.activeUsers.push(req.user.id);
+        }
+        if (!codeSession.active) {
+          codeSession.lastStartTime = new Date();
+          codeSession.active = true;
+        }
+
+        codeSession.save(function(err) {
+          if (err) return next(err);
+          var response = {
+            code: 200,
+            msg: 'Connected'
+          }
+          return response;
+        })
+      } else if (req.user.role == 0) {
+        req.flash('errors', {msg: 'You must be a tutor to join this session!'});
+        return res.redirect('/');
+        // tutor trying to join session
+      } else {
+        CodeSession.findOne({ activeUsers: req.user.id }, function (err, activeSession) {
+          if (err) return next(err);
+          if (activeSession && codeSession.shortCode != activeSession.shortCode) {
+            req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
+            return res.redirect('/');
+          }
+
+          if (!codeSession.active) {
+            req.flash('errors', {msg: 'This student is not currently in a session.'});
+            return res.redirect('/');
+          }
+
+          if (idIndex == -1){
+            codeSession.activeUsers.push(req.user._id);
+          }
+          codeSession.save(function(err) {
+            if (err) return next(err);
+            var response = {
+              code: 200,
+              msg: 'Connected'
+            }
+            return response;
+          })
+        });
+      }
+    } else {
+      req.flash('errors', {msg: 'Unable to connect to session.'});
+      return res.redirect('/');
+    }
+  });
+}

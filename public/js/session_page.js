@@ -43,11 +43,20 @@ $(document).on('ready', function(){
 	socket.on('user-disconnected', function(name, colors) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.');
 	});
+	socket.on('owner-disconnected', function() {
+		$('#force-leave-button').click();
+	});
 	socket.on('user-set', function(name, colors) {
 		socketAttrs.name = name;
 		socketAttrs.colors = colors;
+
+		// activate session and add active users
+		$.post('/session/connect', { shortCode: session.shortCode, _csrf: csrf })
+		.done(function(result){
+			// nothing
+		});
 	});
-	socket.emit('set-user', user.firstName, user.theme, session.shortCode);
+	socket.emit('set-user', user._id.toString(), user.firstName, session.shortCode, session.user.toString());
 
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');

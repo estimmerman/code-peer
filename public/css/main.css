@@ -341,3 +341,7 @@ a:hover {
 .session-list-item:hover {
   border-color: white;
 }
+
+.hidden {
+  visibility: hidden;
+}
