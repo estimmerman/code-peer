@@ -1,5 +1,5 @@
 extends ../layout
-include ../mixins/session_list_item
+include ../mixins/session_list
 
 block content
 	.col-sm-12.m-bottom-15(style='margin-top: 50px')
@@ -8,9 +8,10 @@ block content
 			if activeSession.length > 0
 				h3.text-center Your Active Session
 				+session_list(activeSession)
-				hr
+				if codeSessions.length > 0
+					hr
 			if codeSessions.length > 0
 				+session_list(codeSessions)
-			else
+			else if activeSession.length == 0
 				h3.text-center No Active Sessions
 			

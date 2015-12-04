@@ -145,7 +145,6 @@ server.listen(app.get('port'), function() {
  * Initialize socket.io server
  */
 io.on('connection', function(socket) {
-  console.log('Socket connected');
   socket.on('send-chat-message', function(msg) {
     socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.colors, msg);
   });
@@ -177,7 +176,6 @@ io.on('connection', function(socket) {
       socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
     }
     socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
-    console.log('Socket disconnected');
   });
 });
 
