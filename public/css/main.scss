@@ -295,16 +295,16 @@ a:hover {
 
   }
 
-  .CodeMirror {
-
-  }
-
   select {
 
   }
 
   select:focus {
-    
+
+  }
+
+  /*.CodeMirror {
+
   }
 
   .CodeMirror-gutters {
@@ -314,7 +314,7 @@ a:hover {
   .CodeMirror-linenumber {
 
   }
-
+*/
   #chat {
     background-color: white;
     border-color: #ccc;
@@ -342,7 +342,7 @@ a:hover {
     border-color: black;
   }
 
-  .CodeMirror {
+  /*.CodeMirror {
     background-color: black;
     border-color: black;
     color: white;
@@ -357,7 +357,7 @@ a:hover {
 
   .CodeMirror-linenumber {
     color: white;
-  }
+  }*/
 
   #chat {
     background-color: black;
@@ -386,7 +386,7 @@ a:hover {
     border-color: $blue-dark;
   }
 
-  .CodeMirror {
+  /*.CodeMirror {
     background-color: $blue-light;
     border-color: $blue-dark;
     color: black;
@@ -401,7 +401,7 @@ a:hover {
 
   .CodeMirror-linenumber {
     color: $blue-darkest;
-  }
+  }*/
 
   #chat {
     background-color: $blue-light;

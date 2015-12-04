@@ -9,7 +9,7 @@ $(document).on('ready', function(){
 
 	var headerHeight = $('.navbar').height();
 	var footerHeight = $('footer').height();
-	var bottomPadding = 75;
+	var bottomPadding = 95;
 	var codeAreaHeight = $(window).height() - headerHeight - footerHeight - bottomPadding;
 	var margin = 20;
 	var chatAreaHeight = codeAreaHeight - $('#chat-box').height() - margin;
@@ -125,7 +125,7 @@ $(document).on('ready', function(){
 	setInterval(saveCodeEdits, 5000);
 
 	var getColorOffTheme = function(colors) {
-		switch(user.theme) {
+		switch(user.chatTheme) {
 			case 'default':
 				return colors.default;
 			case 'terminal':

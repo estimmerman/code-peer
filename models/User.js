@@ -13,7 +13,8 @@ var userSchema = new mongoose.Schema({
   school: { type: String, require: true },
   // courses: { type: Array, require: false, default: [] },
 
-  theme: { type: String, require: true, default: 'default' },
+  chatTheme: { type: String, require: true, default: 'default' },
+  codeTheme: { type: String, require: true, default: 'default' },
   filterSettings: { type: Object, default: {'showFull' : false, 'timeOrder' : 'new'} },
 
   email: { type: String, require: true, unique: true, lowercase: true },

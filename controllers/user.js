@@ -369,10 +369,10 @@ exports.postForgot = function(req, res, next) {
   });
 };
 
-exports.postChangeTheme = function(req, res, next) {
+exports.postChangeChatTheme = function(req, res, next) {
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
-    user.theme = req.body.theme;
+    user.chatTheme = req.body.theme;
 
     user.save(function(err) {
       if (err) return next(err);

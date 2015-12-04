@@ -123,7 +123,7 @@ app.post('/session/forceLeave', passportConf.isAuthenticated, sessionController.
 app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
 app.post('/session/leave', passportConf.isAuthenticated, sessionController.postLeaveSession);
 app.post('/session/code/update', passportConf.isAuthenticated, sessionController.postUpdateSessionCode);
-app.post('/theme', passportConf.isAuthenticated, userController.postChangeTheme);
+app.post('/theme/chat', passportConf.isAuthenticated, userController.postChangeChatTheme);
 app.post('/filter/full', passportConf.isAuthenticated, userController.postChangeFilterFull);
 app.post('/filter/time', passportConf.isAuthenticated, userController.postChangeFilterTime);
 
