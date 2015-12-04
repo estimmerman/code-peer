@@ -122,6 +122,7 @@ app.post('/session/start', passportConf.isAuthenticated, sessionController.postS
 app.post('/session/forceLeave', passportConf.isAuthenticated, sessionController.postForceLeaveSession);
 app.post('/session/end', passportConf.isAuthenticated, sessionController.postEndSession);
 app.post('/session/leave', passportConf.isAuthenticated, sessionController.postLeaveSession);
+app.post('/session/code/update', passportConf.isAuthenticated, sessionController.postUpdateSessionCode);
 app.post('/theme', passportConf.isAuthenticated, userController.postChangeTheme);
 app.post('/filter/full', passportConf.isAuthenticated, userController.postChangeFilterFull);
 app.post('/filter/time', passportConf.isAuthenticated, userController.postChangeFilterTime);
@@ -146,6 +147,12 @@ io.on('connection', function(socket) {
   socket.on('send-chat-message', function(msg) {
     socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.colors, msg);
   });
+  socket.on('send-code-update', function(code) {
+    socket.broadcast.to(socket.shortCode).emit('update-code', code);
+  });
+  socket.on('send-language-update', function(lang) {
+    socket.broadcast.to(socket.shortCode).emit('update-language', lang);
+  })
   socket.on('set-user', function(user_id, name, shortCode, sessionOwner) {
     socket.join(shortCode);
     var rooms = io.sockets.adapter.rooms;
@@ -164,7 +171,6 @@ io.on('connection', function(socket) {
     socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
   });
   socket.on('disconnect', function() {
-    // remove active user from session
     if (socket.user_id == socket.owner_id) {
       socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
     }

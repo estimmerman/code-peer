@@ -4,6 +4,7 @@ $(document).on('ready', function(){
 		mode: "text/x-csrc",
 		matchBrackets: true
 	});
+	editor.getDoc().setValue(session.code);
 	$("#language").val('text/x-csrc');
 
 	var headerHeight = $('.navbar').height();
@@ -32,6 +33,13 @@ $(document).on('ready', function(){
 	var socket = io.connect();
 	socket.on('update-chat', function(name, colors, msg) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span>: ' + msg);
+	});
+	socket.on('update-code', function(code) {
+		updateCode(code);
+	});
+	socket.on('update-language', function(lang) {
+		$('#language').val(lang);
+		editor.setOption("mode", lang);
 	});
 	socket.on('user-connected', function(name, colors) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.');
@@ -64,10 +72,26 @@ $(document).on('ready', function(){
 		chatBox.val('');
 	})
 
+	$('#save-button').on('click', function(){
+		saveCodeEdits(true);
+	});
+
 	$('#language').on('change', function (e) {
 	    var optionSelected = $("option:selected", this);
 	    var val = this.value;
-	    editor.setOption("mode", val.toLowerCase());
+	    editor.setOption("mode", val);
+	    socket.emit('send-language-update', val);
+	});
+
+	var receivingChange = false;
+	var changeMade = false;
+	editor.on('change',function(cm){
+		if (!receivingChange) {
+			changeMade = true;
+			socket.emit('send-code-update', cm.getValue());
+		} else {
+			receivingChange = false;
+		}
 	});
 
 	var updateChat = function(msg) {
@@ -75,6 +99,30 @@ $(document).on('ready', function(){
 		chat.append('<p>' + msg + '</p>');
 		chat.scrollTop(chat.prop("scrollHeight"));
 	}
+
+	var updateCode = function(code) {
+		receivingChange = true;
+		editor.getDoc().setValue(code);
+	}
+
+	var showSavingSpinner = function(){
+		$('#saving-spinner').removeClass('hidden');
+	}
+
+	var hideSavingSpinner = function(){
+		$('#saving-spinner').addClass('hidden');
+	}
+
+	var saveCodeEdits = function(forceSave){
+		forceSave = typeof forceSave !== 'undefined' ? forceSave : false;
+		if (changeMade || forceSave){
+			showSavingSpinner();
+			setTimeout(hideSavingSpinner, 300);
+			$.post('/session/code/update', { code: editor.getValue(), shortCode: session.shortCode, _csrf: csrf });
+			changeMade = false;
+		}
+	};
+	setInterval(saveCodeEdits, 5000);
 
 	var getColorOffTheme = function(colors) {
 		switch(user.theme) {

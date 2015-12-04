@@ -15,6 +15,7 @@ module.exports = Object.freeze({
 		'EJS' : 'application/x-ejs',
 		'Fortran' : 'text/x-Fortran',
 		'Go' : 'text/x-go', 
+		'Handlebars' : 'text/x-handlebars-template',
 		'Haskell' : 'text/x-haskell',
 		'HTML' : 'text/html',
 		'Jade' : 'text/x-jade',

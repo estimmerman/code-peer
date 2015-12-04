@@ -5,7 +5,8 @@ var codeSessionSchema = new mongoose.Schema({
   active: { type: Boolean, default: false },
   shortCode: { type: String },
   activeUsers: { type: [mongoose.Schema.ObjectId], default: [] },
-  lastStartTime: { type: Date, default: null }
+  lastStartTime: { type: Date, default: null },
+  code: { type: String }
 });
 
 var shortCodeOptions = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

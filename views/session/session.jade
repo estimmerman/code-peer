@@ -4,6 +4,10 @@ block content
 	script(src="/js/lib/codemirror.js")
 	link(rel="stylesheet" href="/css/codemirror.css")
 
+	script(src="/js/codemirror/addon/multiplex.js")
+	script(src="/js/codemirror/addon/overlay.js")
+	script(src="/js/codemirror/addon/simple.js")
+
 	script(src="/js/codemirror/mode/javascript/javascript.js")
 	script(src="/js/codemirror/mode/htmlmixed/htmlmixed.js")
 	script(src="/js/codemirror/mode/xml/xml.js")
@@ -15,6 +19,7 @@ block content
 	script(src="/js/codemirror/mode/fortran/fortran.js")
 	script(src="/js/codemirror/mode/go/go.js")
 	script(src="/js/codemirror/mode/haskell/haskell.js")
+	script(src="/js/codemirror/mode/handlebars/handlebars.js")
 	script(src="/js/codemirror/mode/htmlembedded/htmlembedded.js")
 	script(src="/js/codemirror/mode/jade/jade.js")
 	script(src="/js/codemirror/mode/markdown/markdown.js")
@@ -31,8 +36,15 @@ block content
 
 	div(class='#{user.theme}-theme')
 		.col-sm-9
-			.col-sm-12
+			.col-sm-6.m-top-15
 				label.control-label(for='code') Start coding here!
+			.col-sm-6.m-bottom-5
+				button.btn.btn-sm.btn-danger.pull-right(id='save-button')
+					| Save
+				div.pull-right.m-right-15.hidden(id='saving-spinner')
+					i.fa.fa-spinner.fa-spin(style='font-size: 16px; margin-top: 10px;')
+					| Saving
+				
 			.col-sm-12
 				textarea.form-control(type='text', id='codemirror', style='height: 700px;')
 			.col-sm-6.m-top-5
@@ -53,7 +65,7 @@ block content
 						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
 						button.btn.btn-lg.btn-danger.full-width(type='submit')
 							| Leave Session
-		.col-sm-3
+		.col-sm-3(style='margin-top: 17px;')
 			.col-sm-12
 				label.control-label(for='chat') Chat
 			.col-sm-12
