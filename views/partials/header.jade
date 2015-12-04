@@ -20,32 +20,9 @@
                 | Theme
                 i.caret
               ul.dropdown-menu
-                .text-center.m-bottom-5
-                  b Chat Theme
-                li
-                  form.form-horizontal(id='theme-form-default', action='/theme/chat', method='POST')
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type='hidden', name='theme', value='default')
-                  a(href='#' onclick='$("#theme-form-default").submit()')
-                    | Default
-                    if user.chatTheme == 'default'
-                      i.fa.fa-check.pull-right
-                li
-                  form.form-horizontal(id='theme-form-terminal', action='/theme/chat', method='POST')
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type='hidden', name='theme', value='terminal')
-                  a(href='#' onclick='$("#theme-form-terminal").submit()')
-                    | Terminal
-                    if user.chatTheme == 'terminal'
-                      i.fa.fa-check.pull-right
-                li
-                  form.form-horizontal(id='theme-form-blue', action='/theme/chat', method='POST')
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type='hidden', name='theme', value='blue')
-                  a(href='#' onclick='$("#theme-form-blue").submit()')
-                    | Blue
-                    if user.chatTheme == 'blue'
-                      i.fa.fa-check.pull-right
+                include chat_theme_choices
+                li.divider
+                include code_theme_choices
       if user && user.role == 1 && path == '/home'
         ul.nav.navbar-nav
           li.dropdown(class=title=='Filters'?'active':undefined)

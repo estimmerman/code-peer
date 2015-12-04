@@ -4,6 +4,7 @@ $(document).on('ready', function(){
 		mode: "text/x-csrc",
 		matchBrackets: true
 	});
+	editor.setOption("theme", user.editorTheme);
 	editor.getDoc().setValue(session.code);
 	$("#language").val('text/x-csrc');
 

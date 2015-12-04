@@ -1,0 +1,82 @@
+.text-center.m-bottom-5.m-top-5
+	b Editor Theme
+li
+	form.form-horizontal(id='editor-theme-form', action='/theme/editor', method='POST')
+		input(type='hidden', name='_csrf', value=_csrf)
+
+		input.hidden(type='radio', name='theme', id='editor-default' value='default')
+		input.hidden(type='radio', name='theme', id='editor-blackboard' value='blackboard')
+		input.hidden(type='radio', name='theme', id='editor-cobalt' value='cobalt')
+		input.hidden(type='radio', name='theme', id='editor-dracula' value='dracula')
+		input.hidden(type='radio', name='theme', id='editor-hopscotch' value='hopscotch')
+		input.hidden(type='radio', name='theme', id='editor-material' value='material')
+		input.hidden(type='radio', name='theme', id='editor-mdn-like' value='mdn-like')
+		input.hidden(type='radio', name='theme', id='editor-midnight' value='midnight')
+		input.hidden(type='radio', name='theme', id='editor-monokai' value='monokai')
+		input.hidden(type='radio', name='theme', id='editor-neo' value='neo')
+		input.hidden(type='radio', name='theme', id='editor-night' value='night')
+		input.hidden(type='radio', name='theme', id='editor-pastel-on-dark' value='pastel-on-dark')
+		input.hidden(type='radio', name='theme', id='editor-railscasts' value='railscasts')
+		input.hidden(type='radio', name='theme', id='editor-solarized' value='solarized')
+		input.hidden(type='radio', name='theme', id='editor-yeti' value='yeti')
+
+	a(href='#', onclick='$("#editor-default").prop("checked", true); $("#editor-theme-form").submit()')
+		| Default
+		if user.editorTheme == 'default'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-blackboard").prop("checked", true); $("#editor-theme-form").submit()')
+		| Blackboard
+		if user.editorTheme == 'blackboard'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-cobalt").prop("checked", true); $("#editor-theme-form").submit()')
+		| Cobalt
+		if user.editorTheme == 'cobalt'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-dracula").prop("checked", true); $("#editor-theme-form").submit()')
+		| Dracula
+		if user.editorTheme == 'dracula'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-hopscotch").prop("checked", true); $("#editor-theme-form").submit()')
+		| Hopscotch
+		if user.editorTheme == 'hopscotch'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-material").prop("checked", true); $("#editor-theme-form").submit()')
+		| Material
+		if user.editorTheme == 'material'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-mdn-like").prop("checked", true); $("#editor-theme-form").submit()')
+		| Mdn-Like
+		if user.editorTheme == 'mdn-like'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-midnight").prop("checked", true); $("#editor-theme-form").submit()')
+		| Midnight
+		if user.editorTheme == 'midnight'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-monokai").prop("checked", true); $("#editor-theme-form").submit()')
+		| Monokai
+		if user.editorTheme == 'monokai'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-neo").prop("checked", true); $("#editor-theme-form").submit()')
+		| Neo
+		if user.editorTheme == 'neo'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-night").prop("checked", true); $("#editor-theme-form").submit()')
+		| Night
+		if user.editorTheme == 'night'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-pastel-on-dark").prop("checked", true); $("#editor-theme-form").submit()')
+		| Pastel-on-Dark
+		if user.editorTheme == 'pastel-on-dark'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-railscasts").prop("checked", true); $("#editor-theme-form").submit()')
+		| Railscasts
+		if user.editorTheme == 'railscasts'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-solarized").prop("checked", true); $("#editor-theme-form").submit()')
+		| Solarized
+		if user.editorTheme == 'solarized'
+			i.fa.fa-check.pull-right
+	a(href='#', onclick='$("#editor-yeti").prop("checked", true); $("#editor-theme-form").submit()')
+		| Yeti
+		if user.editorTheme == 'yeti'
+			i.fa.fa-check.pull-right

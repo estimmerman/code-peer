@@ -381,6 +381,18 @@ exports.postChangeChatTheme = function(req, res, next) {
   });
 }
 
+exports.postChangeEditorTheme = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+    user.editorTheme = req.body.theme;
+
+    user.save(function(err) {
+      if (err) return next(err);
+      res.redirect('back');
+    });
+  });
+}
+
 exports.postChangeFilterFull = function(req, res, next) {
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);

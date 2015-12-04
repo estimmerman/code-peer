@@ -2,7 +2,23 @@ extends ../layout
 
 block content
 	script(src="/js/lib/codemirror.js")
-	link(rel="stylesheet" href="/css/codemirror.css")
+	link(rel="stylesheet" href="/css/codemirror/codemirror.css")
+
+	link(rel="stylesheet" href="/css/codemirror/theme/blackboard.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/cobalt.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/dracula.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/hopscotch.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/material.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/mdn-like.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/midnight.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/monokai.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/neo.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/night.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/pastel-on-dark.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/railscasts.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/solarized.css")
+	link(rel="stylesheet" href="/css/codemirror/theme/yeti.css")
+	
 
 	script(src="/js/codemirror/addon/multiplex.js")
 	script(src="/js/codemirror/addon/overlay.js")
@@ -33,6 +49,8 @@ block content
 	script(src="/js/codemirror/mode/sql/sql.js")
 	script(src="/js/codemirror/mode/swift/swift.js")
 	script(src="/js/codemirror/mode/xml/xml.js")
+
+
 
 	div(class='#{user.chatTheme}-theme')
 		.col-sm-9
