@@ -274,6 +274,28 @@ a:hover {
   height: 100%;
 }
 
+.default-theme {
+  /*select {
+
+  }
+
+  select:focus {
+
+  }*/
+  /*.CodeMirror {
+
+  }
+
+  .CodeMirror-gutters {
+
+  }
+
+  .CodeMirror-linenumber {
+
+  }
+*/
+}
+
 .default-theme #chat {
   background-color: white;
   border-color: #ccc;
@@ -283,36 +305,37 @@ a:hover {
   color: black;
 }
 
+.terminal-theme {
+  /*select {
+    background-color: black;
+    border-color: black;
+    color: white;
+  }
+
+  select:focus {
+    border-color: black;
+  }*/
+  /*.CodeMirror {
+    background-color: black;
+    border-color: black;
+    color: white;
+  }
+
+  .CodeMirror-gutters {
+    background-color: black;
+    border-color: black;
+    color: white;
+    border-right: 1px solid white;
+  }
+
+  .CodeMirror-linenumber {
+    color: white;
+  }*/
+}
+
 .terminal-theme textarea {
   background-color: black;
   border-color: black;
-  color: white;
-}
-
-.terminal-theme select {
-  background-color: black;
-  border-color: black;
-  color: white;
-}
-
-.terminal-theme select:focus {
-  border-color: black;
-}
-
-.terminal-theme .CodeMirror {
-  background-color: black;
-  border-color: black;
-  color: white;
-}
-
-.terminal-theme .CodeMirror-gutters {
-  background-color: black;
-  border-color: black;
-  color: white;
-  border-right: 1px solid white;
-}
-
-.terminal-theme .CodeMirror-linenumber {
   color: white;
 }
 
@@ -325,37 +348,38 @@ a:hover {
   color: white;
 }
 
+.blue-theme {
+  /*select {
+    background-color: $blue-light;
+    border-color: $blue-dark;
+    color: black;
+  }
+
+  select:focus {
+    border-color: $blue-dark;
+  }*/
+  /*.CodeMirror {
+    background-color: $blue-light;
+    border-color: $blue-dark;
+    color: black;
+  }
+
+  .CodeMirror-gutters {
+    background-color: $blue-light;
+    border-color: $blue-dark;
+    color: black;
+    border-right: 1px solid $blue-dark;
+  }
+
+  .CodeMirror-linenumber {
+    color: $blue-darkest;
+  }*/
+}
+
 .blue-theme textarea {
   background-color: #afe6f1;
   border-color: #3cc2dd;
   color: black;
-}
-
-.blue-theme select {
-  background-color: #afe6f1;
-  border-color: #3cc2dd;
-  color: black;
-}
-
-.blue-theme select:focus {
-  border-color: #3cc2dd;
-}
-
-.blue-theme .CodeMirror {
-  background-color: #afe6f1;
-  border-color: #3cc2dd;
-  color: black;
-}
-
-.blue-theme .CodeMirror-gutters {
-  background-color: #afe6f1;
-  border-color: #3cc2dd;
-  color: black;
-  border-right: 1px solid #3cc2dd;
-}
-
-.blue-theme .CodeMirror-linenumber {
-  color: #1e96ae;
 }
 
 .blue-theme #chat {

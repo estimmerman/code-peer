@@ -20,7 +20,7 @@
                 | Theme
                 i.caret
               ul.dropdown-menu
-                .text-center
+                .text-center.m-bottom-5
                   b Chat Theme
                 li
                   form.form-horizontal(id='theme-form-default', action='/theme/chat', method='POST')
@@ -30,7 +30,6 @@
                     | Default
                     if user.chatTheme == 'default'
                       i.fa.fa-check.pull-right
-                li.divider
                 li
                   form.form-horizontal(id='theme-form-terminal', action='/theme/chat', method='POST')
                     input(type='hidden', name='_csrf', value=_csrf)
@@ -39,7 +38,6 @@
                     | Terminal
                     if user.chatTheme == 'terminal'
                       i.fa.fa-check.pull-right
-                li.divider
                 li
                   form.form-horizontal(id='theme-form-blue', action='/theme/chat', method='POST')
                     input(type='hidden', name='_csrf', value=_csrf)
