@@ -84,7 +84,10 @@ $(document).on('ready', function(){
 	    var val = this.value;
 	    editor.setOption("mode", val);
 	    socket.emit('send-language-update', val);
-		$.post('/session/language/update', { language: val, shortCode: session.shortCode, _csrf: csrf });
+		$.post('/session/language/update', { language: val, shortCode: session.shortCode, _csrf: csrf })
+		.done(function(data){
+			// nothing
+		});
 	});
 
 	editor.on('change',function(cm){
@@ -125,7 +128,10 @@ $(document).on('ready', function(){
 		if (changeMade || forceSave){
 			showSavingSpinner();
 			setTimeout(hideSavingSpinner, 300);
-			$.post('/session/code/update', { code: editor.getValue(), shortCode: session.shortCode, _csrf: csrf });
+			$.post('/session/code/update', { code: editor.getValue(), shortCode: session.shortCode, _csrf: csrf })
+			.done(function(data){
+				// nothing
+			});
 			changeMade = false;
 		}
 	};

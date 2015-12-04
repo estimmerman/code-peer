@@ -189,12 +189,19 @@ exports.postConnectToSession = function(req, res, next) {
         }
 
         codeSession.save(function(err) {
-          if (err) return next(err);
-          var response = {
-            code: 200,
-            msg: 'Connected.'
-          }
-          return response;
+          var response = {};
+            if (err) {
+              response = {
+                code: 500,
+                msg: 'Issue connecting to session.'
+              }
+            } else {
+              response = {
+                code: 200,
+                msg: 'Connected.'
+              }
+            }
+            return res.send(response);
         })
       } else if (req.user.role == 0) {
         req.flash('errors', {msg: 'You must be a tutor to join this session!'});
@@ -217,12 +224,19 @@ exports.postConnectToSession = function(req, res, next) {
             codeSession.activeUsers.push(req.user._id);
           }
           codeSession.save(function(err) {
-            if (err) return next(err);
-            var response = {
-              code: 200,
-              msg: 'Connected.'
+            var response = {};
+            if (err) {
+              response = {
+                code: 500,
+                msg: 'Issue connecting to session.'
+              }
+            } else {
+              response = {
+                code: 200,
+                msg: 'Connected.'
+              }
             }
-            return response;
+            return res.send(response);
           })
         });
       }
@@ -255,12 +269,19 @@ exports.postUpdateSessionCode = function(req, res, next) {
       } else {
         codeSession.code = req.body.code;
         codeSession.save(function(err) {
-          if (err) return next(err);
-          var response = {
-            code: 200,
-            msg: 'Saved.'
+          var response = {};
+          if (err) {
+            response = {
+              code: 500,
+              msg: 'Issue saving code.'
+            }
+          } else {
+            response = {
+              code: 200,
+              msg: 'Code saved.'
+            }
           }
-          return response;
+          return res.send(response);
         });
       }
     } else {
@@ -277,7 +298,6 @@ exports.postUpdateSessionCode = function(req, res, next) {
  * Updates session language
 */
 exports.postUpdateSessionLanguage = function(req, res, next) {
-  console.log('hit');
   if (!req.body.language || !req.body.shortCode) {
     req.flash('errors', {msg: 'Bad parameters.'});
     return res.redirect('/');
@@ -293,12 +313,19 @@ exports.postUpdateSessionLanguage = function(req, res, next) {
       } else {
         codeSession.language = req.body.language;
         codeSession.save(function(err) {
-          if (err) return next(err);
-          var response = {
-            code: 200,
-            msg: 'Saved.'
-          }
-          return response;
+          var response = {};
+            if (err) {
+              response = {
+                code: 500,
+                msg: 'Issue saving language change.'
+              }
+            } else {
+              response = {
+                code: 200,
+                msg: 'Language updated.'
+              }
+            }
+            return res.send(response);
         });
       }
     } else {
