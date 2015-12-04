@@ -240,7 +240,6 @@ exports.postConnectToSession = function(req, res, next) {
  * Updates session code
 */
 exports.postUpdateSessionCode = function(req, res, next) {
-  console.log('hit');
   if ((req.body.code != '' && !req.body.code) || !req.body.shortCode) {
     req.flash('errors', {msg: 'Bad parameters.'});
     return res.redirect('/');
@@ -270,3 +269,44 @@ exports.postUpdateSessionCode = function(req, res, next) {
     }
   });
 }
+
+/**
+ * POST /session/language/update
+ * Params: shortCode
+ *         language
+ * Updates session language
+*/
+exports.postUpdateSessionLanguage = function(req, res, next) {
+  console.log('hit');
+  if (!req.body.language || !req.body.shortCode) {
+    req.flash('errors', {msg: 'Bad parameters.'});
+    return res.redirect('/');
+  }
+
+  CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
+    if (err) return next(err);
+    if (codeSession) {
+      var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
+      if (idIndex == -1) {
+        req.flash('errors', {msg: 'You can\'t update a session you\'re not part of!'});
+        return res.redirect('/');
+      } else {
+        codeSession.language = req.body.language;
+        codeSession.save(function(err) {
+          if (err) return next(err);
+          var response = {
+            code: 200,
+            msg: 'Saved.'
+          }
+          return response;
+        });
+      }
+    } else {
+      req.flash('errors', {msg: 'Unable to connect to session.'});
+      return res.redirect('/');
+    }
+  });
+}
+
+
+

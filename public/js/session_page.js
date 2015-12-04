@@ -1,12 +1,12 @@
 $(document).on('ready', function(){
 	var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
 		lineNumbers: true,
-		mode: "text/x-csrc",
 		matchBrackets: true
 	});
 	editor.setOption("theme", user.editorTheme);
 	editor.getDoc().setValue(session.code);
-	$("#language").val('text/x-csrc');
+	editor.setOption("mode", session.language);
+	$("#language").val(session.language);
 
 	var headerHeight = $('.navbar').height();
 	var footerHeight = $('footer').height();
@@ -39,8 +39,7 @@ $(document).on('ready', function(){
 		updateCode(code);
 	});
 	socket.on('update-language', function(lang) {
-		$('#language').val(lang);
-		editor.setOption("mode", lang);
+		updateLanguage(lang);
 	});
 	socket.on('user-connected', function(name, colors) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.');
@@ -63,6 +62,9 @@ $(document).on('ready', function(){
 	});
 	socket.emit('set-user', user._id.toString(), user.firstName, session.shortCode, session.user.toString());
 
+	var receivingChange = false;
+	var changeMade = false;
+
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');
 		if (chatBox.val().trim() == '') return;
@@ -78,14 +80,13 @@ $(document).on('ready', function(){
 	});
 
 	$('#language').on('change', function (e) {
-	    var optionSelected = $("option:selected", this);
+		var optionSelected = $("option:selected", this);
 	    var val = this.value;
 	    editor.setOption("mode", val);
 	    socket.emit('send-language-update', val);
+		$.post('/session/language/update', { language: val, shortCode: session.shortCode, _csrf: csrf });
 	});
 
-	var receivingChange = false;
-	var changeMade = false;
 	editor.on('change',function(cm){
 		if (!receivingChange) {
 			changeMade = true;
@@ -104,6 +105,11 @@ $(document).on('ready', function(){
 	var updateCode = function(code) {
 		receivingChange = true;
 		editor.getDoc().setValue(code);
+	}
+
+	var updateLanguage = function(lang) {
+		$('#language').val(lang);
+		editor.setOption("mode", lang);
 	}
 
 	var showSavingSpinner = function(){
