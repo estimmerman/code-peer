@@ -1,13 +1,46 @@
 extends ../layout
 
 block content
+	script(src="/js/lib/codemirror.js")
+	link(rel="stylesheet" href="/css/codemirror.css")
+
+	script(src="/js/codemirror/mode/javascript/javascript.js")
+	script(src="/js/codemirror/mode/htmlmixed/htmlmixed.js")
+	script(src="/js/codemirror/mode/xml/xml.js")
+	script(src="/js/codemirror/mode/css/css.js")
+	script(src="/js/codemirror/mode/clike/clike.js")
+	script(src="/js/codemirror/mode/clojure/clojure.js")
+	script(src="/js/codemirror/mode/coffeescript/coffeescript.js")
+	script(src="/js/codemirror/mode/django/django.js")
+	script(src="/js/codemirror/mode/fortran/fortran.js")
+	script(src="/js/codemirror/mode/go/go.js")
+	script(src="/js/codemirror/mode/haskell/haskell.js")
+	script(src="/js/codemirror/mode/htmlembedded/htmlembedded.js")
+	script(src="/js/codemirror/mode/jade/jade.js")
+	script(src="/js/codemirror/mode/markdown/markdown.js")
+	script(src="/js/codemirror/mode/pascal/pascal.js")
+	script(src="/js/codemirror/mode/perl/perl.js")
+	script(src="/js/codemirror/mode/php/php.js")
+	script(src="/js/codemirror/mode/python/python.js")
+	script(src="/js/codemirror/mode/r/r.js")
+	script(src="/js/codemirror/mode/ruby/ruby.js")
+	script(src="/js/codemirror/mode/sass/sass.js")
+	script(src="/js/codemirror/mode/sql/sql.js")
+	script(src="/js/codemirror/mode/swift/swift.js")
+	script(src="/js/codemirror/mode/xml/xml.js")
+
 	div(class='#{user.theme}-theme')
 		.col-sm-9
 			.col-sm-12
 				label.control-label(for='code') Start coding here!
 			.col-sm-12
-				textarea.form-control(type='text', name='code', id='code', style='height: 700px; width: 100%;')
-			.col-sm-12.m-top-15
+				textarea.form-control(type='text', id='codemirror', style='height: 700px;')
+			.col-sm-6.m-top-5
+				label.control-label(for='language') Language
+				select.form-control(name='language', id='language')
+					each val, key in languages
+						option(value=val)= key
+			.col-sm-6.m-top-20
 				if isStudent
 					form.form-horizontal(id='end-session-form', action='/session/end', method='POST')
 						input(type='hidden', name='_csrf', value=_csrf)
@@ -27,7 +60,7 @@ block content
 				div(id='chat', style='height: 700px; width: 100%;')
 			.col-sm-12
 				textarea.form-control.m-top-5(type='text', name='chat-box', id='chat-box', style='height: 75px; width: 100%;')
-			.col-sm-12.m-top-15
+			.col-sm-12.m-top-20
 				button.btn.btn-lg.btn-danger.full-width(id='chat-button')
 					i.fa.fa-commenting
 					| Send
@@ -41,5 +74,5 @@ block content
 	script(type='text/javascript').
 		var user = !{JSON.stringify(user)};
 		var session = !{JSON.stringify(codeSession)};
-		var csrf = !{JSON.stringify(_csrf)};
+		var csrf = !{JSON.stringify(_csrf)};		
 	script(src='/js/session_page.js')

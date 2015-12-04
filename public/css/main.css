@@ -254,6 +254,10 @@ a:hover {
   margin-top: 5px;
 }
 
+.m-top-20 {
+  margin-top: 20px;
+}
+
 .m-bottom-15 {
   margin-bottom: 15px;
 }
@@ -285,6 +289,33 @@ a:hover {
   color: white;
 }
 
+.terminal-theme select {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+.terminal-theme select:focus {
+  border-color: black;
+}
+
+.terminal-theme .CodeMirror {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+.terminal-theme .CodeMirror-gutters {
+  background-color: black;
+  border-color: black;
+  color: white;
+  border-right: 1px solid white;
+}
+
+.terminal-theme .CodeMirror-linenumber {
+  color: white;
+}
+
 .terminal-theme #chat {
   background-color: black;
   border-color: black;
@@ -298,6 +329,33 @@ a:hover {
   background-color: #afe6f1;
   border-color: #3cc2dd;
   color: black;
+}
+
+.blue-theme select {
+  background-color: #afe6f1;
+  border-color: #3cc2dd;
+  color: black;
+}
+
+.blue-theme select:focus {
+  border-color: #3cc2dd;
+}
+
+.blue-theme .CodeMirror {
+  background-color: #afe6f1;
+  border-color: #3cc2dd;
+  color: black;
+}
+
+.blue-theme .CodeMirror-gutters {
+  background-color: #afe6f1;
+  border-color: #3cc2dd;
+  color: black;
+  border-right: 1px solid #3cc2dd;
+}
+
+.blue-theme .CodeMirror-linenumber {
+  color: #1e96ae;
 }
 
 .blue-theme #chat {
@@ -319,7 +377,8 @@ a:hover {
   font-size: 13px;
 }
 
-#code {
+.CodeMirror {
+  border-radius: 4px;
   font-size: 13px;
 }
 

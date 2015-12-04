@@ -1,24 +1,20 @@
 $(document).on('ready', function(){
+	var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
+		lineNumbers: true,
+		mode: "text/x-csrc",
+		matchBrackets: true
+	});
+	$("#language").val('text/x-csrc');
+
 	var headerHeight = $('.navbar').height();
 	var footerHeight = $('footer').height();
 	var bottomPadding = 75;
 	var codeAreaHeight = $(window).height() - headerHeight - footerHeight - bottomPadding;
 	var margin = 20;
 	var chatAreaHeight = codeAreaHeight - $('#chat-box').height() - margin;
-	$('#code').css('height', codeAreaHeight);
+	$('.CodeMirror').css('height', codeAreaHeight);
+	$('.CodeMirror-gutters').css('height', codeAreaHeight);
 	$('#chat').css('height', chatAreaHeight);
-
-	// allow tab character in the code textarea
-	$(document).delegate('#code', 'keydown', function(e){
-		var keyCode = e.keyCode || e.which;
-		if (keyCode == 9) {
-			e.preventDefault();
-			var start = $(this).get(0).selectionStart;
-			var end = $(this).get(0).selectionEnd;
-			$(this).val($(this).val().substring(0, start) + '\t' + $(this).val().substring(end));
-			$(this).get(0).selectionStart = $(this).get(0).selectionEnd = start + 1;
-		}
-	});
 
 	// have enter key submit chat message
 	$(document).delegate('#chat-box', 'keydown', function(e){
@@ -67,6 +63,12 @@ $(document).on('ready', function(){
 		updateChat('<span style="color: ' + getColorOffTheme(socketAttrs.colors) + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
 		chatBox.val('');
 	})
+
+	$('#language').on('change', function (e) {
+	    var optionSelected = $("option:selected", this);
+	    var val = this.value;
+	    editor.setOption("mode", val.toLowerCase());
+	});
 
 	var updateChat = function(msg) {
 		chat = $('#chat');

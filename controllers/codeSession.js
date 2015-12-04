@@ -2,6 +2,7 @@ var _ = require('lodash');
 var async = require('async');
 var CodeSession = require('../models/CodeSession');
 var helpers = require('../helpers/helpers');
+var constants = require('../helpers/constants');
 
 /**
  * GET /session/:shortCode
@@ -20,7 +21,8 @@ exports.getSession = function(req, res) {
         return res.render('session/session', {
           title: 'Session',
           codeSession: codeSession,
-          isStudent: true
+          isStudent: true,
+          languages: constants.LANGUAGES
         });
         // another student trying to access session shouldn't be allowed
       } else if (req.user.role == 0) {
@@ -42,7 +44,8 @@ exports.getSession = function(req, res) {
           return res.render('session/session', {
             title: 'Session',
             codeSession: codeSession,
-            isStudent: false
+            isStudent: false,
+            languages: constants.LANGUAGES
           });
         });
       }
