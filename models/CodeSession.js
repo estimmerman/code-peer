@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var async = require('async');
 
 // mongoose schema for a CodeSession
 // each User has only ONE CodeSession attributed to them
@@ -8,7 +9,7 @@ var codeSessionSchema = new mongoose.Schema({
   // if the session is active
   active: { type: Boolean, default: false },
   // the unique shortCode attributed to the session
-  shortCode: { type: String },
+  shortCode: { type: String, unique: true },
   // active users in the session, array of user_ids
   activeUsers: { type: [mongoose.Schema.ObjectId], default: [] },
   // start time of the session
@@ -27,9 +28,28 @@ var shortCodeOptions = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123
 codeSessionSchema.pre('save', function(next) {
   var codeSession = this;
   if (codeSession.shortCode) return next();
-  codeSession.shortCode = Array(8).join().split(',').map(function() { return shortCodeOptions.charAt(Math.floor(Math.random() * shortCodeOptions.length)); }).join('');
-  next();
+
+  generateUniqueShortCode(codeSession, next);
 });
 
+var CodeSessionModel = mongoose.model('CodeSession', codeSessionSchema);
+// used to create a unique shortcode
+// will keep generating shortcodes as long as there exists a session which has that shortcode
+// 99.99999% of the time only runs once, but it's necessary in case there is a non-unique shortcode generated
+var generateUniqueShortCode = function(session, next) {
+  var shortCode = Array(8).join().split(',').map(function() { return shortCodeOptions.charAt(Math.floor(Math.random() * shortCodeOptions.length)); }).join('');
+  CodeSessionModel.count({ shortCode: shortCode }, function (err, count) {
+    if (err) {
+      return next(new Error('There was an issue creating the unique shortcode for your session!'));
+    }
+    if (count == 0){
+      session.shortCode = shortCode;
+      next();
+    } else {
+      return generateUniqueShortCode(session, next);
+    }
+  });
+}
+
 // set the schema as an export
-module.exports = mongoose.model('CodeSession', codeSessionSchema);
+module.exports = CodeSessionModel;
