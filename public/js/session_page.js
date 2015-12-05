@@ -102,6 +102,14 @@ $(document).on('ready', function(){
 	var receivingChange = false;
 	var changeMade = false;
 
+	// event listener for the owner of a session ending it, to kick other users out
+	$('#end-session-button').on('click', function(){
+		// emit event saying owner is disconnecting
+		socket.emit('owner-disconnecting');
+		// submit the end session form
+		$('#end-session-form-button').click();
+	});
+
 	// event listener for the chat button
 	$('#chat-button').on('click', function(){
 		var chatBox = $('#chat-box');

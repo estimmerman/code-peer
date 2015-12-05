@@ -72,8 +72,9 @@ block content
 					form.form-horizontal(id='end-session-form', action='/session/end', method='POST')
 						input(type='hidden', name='_csrf', value=_csrf)
 						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
-						button.btn.btn-lg.btn-danger.full-width(type='submit')
-							| End Session
+						button.hidden(type='submit', id='end-session-form-button')
+					button.btn.btn-lg.btn-danger.full-width(id='end-session-button')
+						| End Session
 				else
 					form.form-horizontal(id='leave-session-form', action='/session/leave', method='POST')
 						input(type='hidden', name='_csrf', value=_csrf)

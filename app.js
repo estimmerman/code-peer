@@ -200,12 +200,13 @@ io.on('connection', function(socket) {
     // broadcasts to other users in that room that this user has connected to the session
     socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
   });
+  // event listener for owner ending session
+  socket.on('owner-disconnecting', function() {
+    // if the owner of a session purposefully ends it, kick all other uses out of the room
+    socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
+  });
   // catches the disconnect of a session
   socket.on('disconnect', function() {
-    // if the owner of a session leaves, kick all other uses out of the room
-    if (socket.user_id == socket.owner_id) {
-      socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
-    }
     // broadcast to users in the room that this user has disconnected from the session
     socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
   });
