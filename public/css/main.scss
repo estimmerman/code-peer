@@ -359,6 +359,10 @@ a:hover {
   font-size: 13px;
 }
 
+.CodeMirror-gutters {
+  border-radius: 4px 0 0 4px;
+}
+
 .session-list {
   overflow: auto;
 }

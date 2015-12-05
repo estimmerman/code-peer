@@ -1,3 +1,7 @@
+/*
+  SCSS file for all the CSS for the project
+  Pretty self-explanatory
+*/
 html {
   position: relative;
   min-height: 100%;
@@ -274,28 +278,6 @@ a:hover {
   height: 100%;
 }
 
-.default-theme {
-  /*select {
-
-  }
-
-  select:focus {
-
-  }*/
-  /*.CodeMirror {
-
-  }
-
-  .CodeMirror-gutters {
-
-  }
-
-  .CodeMirror-linenumber {
-
-  }
-*/
-}
-
 .default-theme #chat {
   background-color: white;
   border-color: #ccc;
@@ -303,34 +285,6 @@ a:hover {
 
 .default-theme #chat p {
   color: black;
-}
-
-.terminal-theme {
-  /*select {
-    background-color: black;
-    border-color: black;
-    color: white;
-  }
-
-  select:focus {
-    border-color: black;
-  }*/
-  /*.CodeMirror {
-    background-color: black;
-    border-color: black;
-    color: white;
-  }
-
-  .CodeMirror-gutters {
-    background-color: black;
-    border-color: black;
-    color: white;
-    border-right: 1px solid white;
-  }
-
-  .CodeMirror-linenumber {
-    color: white;
-  }*/
 }
 
 .terminal-theme textarea {
@@ -346,34 +300,6 @@ a:hover {
 
 .terminal-theme #chat p {
   color: white;
-}
-
-.blue-theme {
-  /*select {
-    background-color: $blue-light;
-    border-color: $blue-dark;
-    color: black;
-  }
-
-  select:focus {
-    border-color: $blue-dark;
-  }*/
-  /*.CodeMirror {
-    background-color: $blue-light;
-    border-color: $blue-dark;
-    color: black;
-  }
-
-  .CodeMirror-gutters {
-    background-color: $blue-light;
-    border-color: $blue-dark;
-    color: black;
-    border-right: 1px solid $blue-dark;
-  }
-
-  .CodeMirror-linenumber {
-    color: $blue-darkest;
-  }*/
 }
 
 .blue-theme textarea {
@@ -404,6 +330,10 @@ a:hover {
 .CodeMirror {
   border-radius: 4px;
   font-size: 13px;
+}
+
+.CodeMirror-gutters {
+  border-radius: 4px 0 0 4px;
 }
 
 .session-list {
