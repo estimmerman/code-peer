@@ -123,12 +123,12 @@ exports.postSignup = function(req, res, next) {
     lastName: req.body.lastName,
     role: req.body.role,
     school: req.body.school,
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: req.body.password
   });
 
   // sees if user exists by this email already
-  User.findOne({ email: req.body.email }, function(err, existingUser) {
+  User.findOne({ email: user.email }, function(err, existingUser) {
     // if user exists with this email, post error
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
