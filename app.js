@@ -1,22 +1,30 @@
 /**
  * Module dependencies.
+ * I'll briefly comment the purpose of some of the big ones
  */
+ // framework for node.js
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var compress = require('compression');
 var favicon = require('serve-favicon');
+// session management
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+// error handling
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
 var methodOverride = require('method-override');
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')(session);
+// showing errors (flashes)
 var flash = require('express-flash');
 var path = require('path');
+// MongoDB module for convenient defining of schemas and querying
 var mongoose = require('mongoose');
+// for user authentication
 var passport = require('passport');
+// form validation
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var request = require('request');

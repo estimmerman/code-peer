@@ -1,7 +1,12 @@
+// file containing large constant variables/arrays
 module.exports = Object.freeze({
+	// colors for the various chat themes
+	// colors based off colors that show well (not too hard to see) given the theme
     NAME_COLORS_DEFAULT : ['blue', 'green', 'red', 'darkviolet', 'cornflowerblue', 'crimson', 'seagreen', 'orangered'],
     NAME_COLORS_TERMINAL : ['aquamarine', 'khaki', 'palegreen', 'yellow', 'seagreen', 'darkorange', 'darkturquoise'],
     NAME_COLORS_BLUE : ['darkcyan', 'darkmagenta', 'royalblue', 'mediumvioletred', 'orchid'],
+    // json object of the coding language options for the editor, and the
+    // corresponding 'mode' that must be given to the editor to set the appropriate language
     LANGUAGES : {
     	'ASP.NET' : 'application/x-aspx',
     	'C' : 'text/x-csrc',
