@@ -21,6 +21,9 @@ var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var request = require('request');
 
+/**
+ * Helpers
+ */
 var helpers = require('./helpers/helpers');
 var constants = require('./helpers/constants');
 
@@ -43,6 +46,11 @@ var passportConf = require('./config/passport');
  */
 var app = express();
 var server = require('http').Server(app);
+
+/**
+ * Socket.io server - socket.io is used for the websockets to enable communication
+ * between browser sessions
+ */
 var io = require('socket.io')(server);
 
 /**
@@ -55,7 +63,8 @@ mongoose.connection.on('error', function() {
 });
 
 /**
- * Express configuration.
+ * Express configurations
+ * Sets and initializes a bunch of settings for rendering, parsing, requests, locals, server
  */
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -97,7 +106,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: oneDay }));
 
 
 /**
- * Primary app routes.
+ * Routing - various routes for GET and POST
  */
 app.get('/', homeController.getLandingPage)
 app.get('/home', passportConf.isAuthenticated, homeController.index);
@@ -145,36 +154,51 @@ server.listen(app.get('port'), function() {
  * Initialize socket.io server
  */
 io.on('connection', function(socket) {
+  // broadcasts chat message to users in that session
   socket.on('send-chat-message', function(msg) {
     socket.broadcast.to(socket.shortCode).emit('update-chat', socket.name, socket.colors, msg);
   });
+  // broadcasts updates to the code editor to users in that session
   socket.on('send-code-update', function(code) {
     socket.broadcast.to(socket.shortCode).emit('update-code', code);
   });
+  // broadcasts updates to the coding language to users in that session
   socket.on('send-language-update', function(lang) {
     socket.broadcast.to(socket.shortCode).emit('update-language', lang);
   })
+  // initializes the socket's locals for use later on
   socket.on('set-user', function(user_id, name, shortCode, sessionOwner) {
+    // join a Room by the shortCode of the session
+    // these rooms allow broadcasting message to only users in that session,
+    // as opposed to all users on the socket.io server
     socket.join(shortCode);
-    var rooms = io.sockets.adapter.rooms;
+    // setting socket locals
     socket.user_id = user_id;
     socket.owner_id = sessionOwner;
     socket.name = name;
     socket.shortCode = shortCode;
 
+    // socket colors determine the color of the name depending on the theme of the chat area
+    // hashes the name of the user to determine color
     socket.colors = {
       'default': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_DEFAULT),
       'terminal': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_TERMINAL),
       'blue': helpers.getUsernameColor(socket.name, constants.NAME_COLORS_BLUE)
     }
 
+    // returns message to original socket with the initialized locals,
+    // confirming that the socket has been initialized
     socket.emit('user-set', socket.name, socket.colors);
+    // broadcasts to other users in that room that this user has connected to the session
     socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
   });
+  // catches the disconnect of a session
   socket.on('disconnect', function() {
+    // if the owner of a session leaves, kick all other uses out of the room
     if (socket.user_id == socket.owner_id) {
       socket.broadcast.to(socket.shortCode).emit('owner-disconnected');
     }
+    // broadcast to users in the room that this user has disconnected from the session
     socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
   });
 });
