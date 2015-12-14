@@ -139,35 +139,11 @@ exports.postEndSession = function(req, res, next) {
  * POST /session/forceLeave
  * Params: shortCode
  * Forces a user/tutor out of a session when the owner ends the session
+ * Does not need to alter the CodeSession model since that is handled when the owner ends the session
 */
 exports.postForceLeaveSession = function(req, res, next) {
-  // gets session by shortcode
-  CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
-    if (err) return;
-    // validates session existence
-    if (codeSession) {
-      // if the user leaving is in the active users for the session, remove them
-      var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
-      if (idIndex != -1) {
-        codeSession.activeUsers.splice(idIndex, 1);
-      }
-      // deactive session if no active users left, or if owner leaves session
-      // the owner should never really call this, but rather /session/end, but this is just an edge case
-      if (codeSession.user.toString() == req.user.id.toString() || codeSession.activeUsers.length == 0) {
-        codeSession.active = false;
-      }
-      // save session and redirect to homepage, with message saying the owner of the session left
-      codeSession.save(function(err) {
-        if (err) return;
-        req.flash('errors', { msg: 'The owner has ended the session.' });
-        return res.redirect('/');
-      });
-    // can't leave a session that doesn't exist
-    } else {
-      req.flash('errors', {msg: 'Could not find session to leave.'});
-      return res.redirect('/');
-    }
-  });
+  req.flash('errors', { msg: 'The owner has ended the session.' });
+  return res.redirect('/');
 }
 
 /**
