@@ -12,6 +12,14 @@ body {
   margin-bottom: 75px;
 }
 
+body ul {
+  list-style: none;
+}
+
+body ul b {
+  color: black;
+}
+
 footer {
   position: absolute;
   bottom: 0;
