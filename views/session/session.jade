@@ -49,10 +49,17 @@ block content
 	script(src="/js/codemirror/mode/swift/swift.js")
 	script(src="/js/codemirror/mode/xml/xml.js")
 
-	div(class='#{user.chatTheme}-theme')
+	div
 		.col-sm-9
 			.col-sm-6.m-top-15
-				label.control-label(for='code') Start coding here!
+				label.control-label.pull-left(for='codemirror') Coding Area
+				div.pull-left(style='margin-left: -30px;')
+					ul
+						li.dropdown.pull-right
+							a.dropdown-toggle(href='#', data-toggle='dropdown')
+								i.fa.fa-cog
+							ul.dropdown-menu
+								include ../partials/code_theme_choices.jade
 			.col-sm-6.m-bottom-5
 				button.btn.btn-sm.btn-danger.pull-right(id='save-button')
 					| Save
@@ -81,9 +88,16 @@ block content
 						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
 						button.btn.btn-lg.btn-danger.full-width(type='submit')
 							| Leave Session
-		.col-sm-3(style='margin-top: 17px;')
-			.col-sm-12
+		.col-sm-3(id='chat-section', style='margin-top: 17px;', class='#{user.chatTheme}-theme')
+			.col-sm-6
 				label.control-label(for='chat') Chat
+			.col-sm-6
+				ul
+					li.dropdown.pull-right
+						a.dropdown-toggle(href='#', data-toggle='dropdown')
+							i.fa.fa-cog
+						ul.dropdown-menu
+							include ../partials/chat_theme_choices.jade
 			.col-sm-12
 				div(id='chat', style='height: 700px; width: 100%;')
 			.col-sm-12

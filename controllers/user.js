@@ -434,16 +434,42 @@ exports.postForgot = function(req, res, next) {
  * Updates the chat theme for the user
  */
 exports.postChangeChatTheme = function(req, res, next) {
+  response = {};
+  // validate parameters
+  if (!req.body.theme) {
+    response = {
+      code: 400,
+      msg: 'No theme given.'
+    }
+    return res.send(response);
+  }
+
   // gets user
   User.findById(req.user.id, function(err, user) {
-    if (err) return next(err);
+    if (err) {
+      response = {
+        code: 500,
+        msg: 'Could not find user to update.'
+      }
+      return res.send(response);
+    }
     // updates user's chat theme with the given theme
     user.chatTheme = req.body.theme;
 
     // saves user
     user.save(function(err) {
-      if (err) return next(err);
-      res.redirect('back');
+      if (err) {
+        response = {
+          code: 500,
+          msg: 'Error with saving theme.'
+        }
+      } else {
+        response = {
+          code: 200,
+          msg: 'Theme updated.'
+        }
+      }      
+      return res.send(response);
     });
   });
 }
@@ -453,16 +479,42 @@ exports.postChangeChatTheme = function(req, res, next) {
  * Updates the editor them for the user
  */
 exports.postChangeEditorTheme = function(req, res, next) {
+  response = {};
+  // validate parameters
+  if (!req.body.theme) {
+    response = {
+      code: 400,
+      msg: 'No theme given.'
+    }
+    return res.send(response);
+  }
+
   // gets user
   User.findById(req.user.id, function(err, user) {
-    if (err) return next(err);
+    if (err) {
+      response = {
+        code: 500,
+        msg: 'Could not find user to update.'
+      }
+      return res.send(response);
+    }
     // updates editor theme with the given theme
     user.editorTheme = req.body.theme;
 
     // saves user
     user.save(function(err) {
-      if (err) return next(err);
-      res.redirect('back');
+      if (err) {
+        response = {
+          code: 500,
+          msg: 'Error with saving theme.'
+        }
+      } else {
+        response = {
+          code: 200,
+          msg: 'Theme updated.'
+        }
+      }      
+      return res.send(response);
     });
   });
 }

@@ -1,22 +1,17 @@
 .text-center.m-bottom-5
-    b Chat Theme
+    b Theme
 li
-  form.form-horizontal(id='chat-theme-form', action='/theme/chat', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-
+  form.form-horizontal(id='chat-theme-form')
     input.hidden(type='radio', name='theme', id='chat-default', value='default')
     input.hidden(type='radio', name='theme', id='chat-terminal', value='terminal')
     input.hidden(type='radio', name='theme', id='chat-blue', value='blue')
 
   a(href='#', onclick='$("#chat-default").prop("checked", true); $("#chat-theme-form").submit()')
     | Default
-    if user.chatTheme == 'default'
-      i.fa.fa-check.pull-right
+    i.fa.fa-check.pull-right.hidden(id='chat-default-check')
   a(href='#', onclick='$("#chat-terminal").prop("checked", true); $("#chat-theme-form").submit()')
     | Terminal
-    if user.chatTheme == 'terminal'
-      i.fa.fa-check.pull-right
+    i.fa.fa-check.pull-right.hidden(id='chat-terminal-check')
   a(href='#', onclick='$("#chat-blue").prop("checked", true); $("#chat-theme-form").submit()')
     | Blue
-    if user.chatTheme == 'blue'
-      i.fa.fa-check.pull-right
+    i.fa.fa-check.pull-right.hidden(id='chat-blue-check')

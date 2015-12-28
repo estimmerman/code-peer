@@ -27,6 +27,10 @@ $(document).on('ready', function(){
 	$('.CodeMirror-gutters').css('height', codeAreaHeight);
 	$('#chat').css('height', chatAreaHeight);
 
+	// set proper themes as checked
+	$('#chat-' + user.chatTheme + '-check').removeClass('hidden');
+	$('#editor-' + user.editorTheme + '-check').removeClass('hidden');
+
 	// have enter key submit chat message if focused on chat-box
 	$(document).delegate('#chat-box', 'keydown', function(e){
 		var keyCode = e.keyCode || e.which;
@@ -131,8 +135,7 @@ $(document).on('ready', function(){
 
 	// event listener for a change of the editor language dropdown
 	$('#language').on('change', function (e) {
-		// get the new selected option
-		var optionSelected = $("option:selected", this);
+		// get the new selected language
 	    var val = this.value;
 	    // update the 'mode' or coding language of the editor
 	    editor.setOption("mode", val);
@@ -144,6 +147,45 @@ $(document).on('ready', function(){
 		.done(function(data){
 			// nothing to do here
 		});
+	});
+
+	// async POST for changing chat theme
+	$('#chat-theme-form').on('submit', function() {
+		var theme = this.theme.value;
+		if (theme != user.chatTheme) {
+			$.post('/theme/chat', { theme: theme, _csrf: csrf })
+			.done(function(data){
+				// update css class based off new chat theme, and checked value in dropdown
+				$('#chat-' + user.chatTheme + '-check').addClass('hidden');
+
+				var chatSection = $('#chat-section');
+				chatSection.removeClass(user.chatTheme + '-theme');
+				user.chatTheme = theme;
+				var themeClass = theme + '-theme';
+				chatSection.addClass(themeClass);
+
+				$('#chat-' + user.chatTheme + '-check').removeClass('hidden');
+			});
+		}
+		return false;
+	});
+
+	// async POST for changing editor theme
+	$('#editor-theme-form').on('submit', function() {
+		var theme = this.theme.value;
+		if (theme != user.editorTheme) {
+			$.post('/theme/editor', { theme: theme, _csrf: csrf })
+			.done(function(data){
+				// update editor theme and checked value in dropdown
+				$('#editor-' + user.editorTheme + '-check').addClass('hidden');
+
+				user.editorTheme = theme;
+				editor.setOption("theme", theme);
+
+				$('#editor-' + user.editorTheme + '-check').removeClass('hidden');
+			});
+		}
+		return false;
 	});
 
 	// event listener for changes to the editor

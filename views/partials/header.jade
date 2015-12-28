@@ -13,16 +13,6 @@
       ul.nav.navbar-nav
         li(class=title=='Home'?'active':undefined)
           a(href='/') Home
-      if user && codeSession && codeSession.shortCode
-        ul.nav.navbar-nav
-          li.dropdown(class=title=='Theme'?'active':undefined)
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Theme
-                i.caret
-              ul.dropdown-menu
-                include chat_theme_choices
-                li.divider
-                include code_theme_choices
       if user && user.role == 1 && path == '/home'
         ul.nav.navbar-nav
           li.dropdown(class=title=='Filters'?'active':undefined)
