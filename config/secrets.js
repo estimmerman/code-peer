@@ -6,11 +6,11 @@ module.exports = {
 
   db: process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/code-peer',
 
-  sessionSecret: process.env.SESSION_SECRET || 'axolotl',
+  sessionSecret: process.env.SESSION_SECRET || 'test_session_secret',
 
   sendgrid: {
-    user: process.env.SENDGRID_USER || 'erictimmerman',
-    password: process.env.SENDGRID_PASSWORD || 'xQTdtHs9zZACYeUYJFizGYZA9TzWmF'
+    user: process.env.SENDGRID_USER || 'test_user',
+    password: process.env.SENDGRID_PASSWORD || 'test_password'
   }
 
 };

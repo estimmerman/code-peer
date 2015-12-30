@@ -2,6 +2,9 @@
  * Module dependencies.
  * I'll briefly comment the purpose of some of the big ones
  */
+
+// environment variable manager
+var dotenv = require('dotenv').load();
  // framework for node.js
 var express = require('express');
 var cookieParser = require('cookie-parser');
