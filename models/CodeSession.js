@@ -11,7 +11,12 @@ var codeSessionSchema = new mongoose.Schema({
   // the unique shortCode attributed to the session
   shortCode: { type: String, unique: true },
   // active users in the session, array of user_ids
-  activeUsers: { type: [mongoose.Schema.ObjectId], default: [] },
+  activeUsers: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User'
+    }
+  ],
   // start time of the session
   lastStartTime: { type: Date, default: null },
   // the saved code for the session

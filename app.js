@@ -198,7 +198,7 @@ io.on('connection', function(socket) {
     // confirming that the socket has been initialized
     socket.emit('user-set', socket.name, socket.colors);
     // broadcasts to other users in that room that this user has connected to the session
-    socket.broadcast.to(socket.shortCode).emit('user-connected', socket.name, socket.colors); 
+    socket.broadcast.to(socket.shortCode).emit('user-connected', socket.user_id, socket.name, socket.colors); 
   });
   // event listener for owner ending session
   socket.on('owner-disconnecting', function() {
@@ -208,7 +208,7 @@ io.on('connection', function(socket) {
   // catches the disconnect of a session
   socket.on('disconnect', function() {
     // broadcast to users in the room that this user has disconnected from the session
-    socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.name, socket.colors);
+    socket.broadcast.to(socket.shortCode).emit('user-disconnected', socket.user_id, socket.name, socket.colors);
   });
 });
 

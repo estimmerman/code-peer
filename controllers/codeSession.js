@@ -14,16 +14,40 @@ var constants = require('../helpers/constants');
  */
 exports.getSession = function(req, res) {
   // gets session from the shortCode parameter in the url
-  CodeSession.findOne({ shortCode: req.params.shortCode }, function(err, codeSession) {
+  CodeSession.findOne({ shortCode: req.params.shortCode })
+  .populate('activeUsers', 'firstName lastName school')
+  .exec(function(err, codeSession) {
     if (err) return next(err);
     // makes sure session exists
     if (codeSession) {
+      // since I'm populating an object, for the getIdIndexInArray, I need to map just the user ids to an array
+      var activeUsersIds = [];
+      codeSession.activeUsers.forEach(function(user) {
+        activeUsersIds.push(user.id);
+      });
+
+      var userInActiveUsers = helpers.getIdIndexInArray(req.user._id, activeUsersIds) != -1;
+
       // if activeUsers for session is 2 or more, and the user trying to access it isn't one of them, session is full
       // users helper method getIdIndexInArray from helpers.js to see if user.id is in the activeUsers of the session
-      if (codeSession.activeUsers.length >= 2 && helpers.getIdIndexInArray(req.user._id, codeSession.activeUsers) == -1) {
+      if (codeSession.activeUsers.length >= 2 && !userInActiveUsers) {
         req.flash('errors', {msg: 'This session is full!'});
         return res.redirect('/');
       }
+
+      // if user isn't in activeUsers (which is true when they are initially joining a session, since they are added to activeUsers only upon socket.io connection)
+      // then add them, to populate the active users list correctly in the session
+      if (!userInActiveUsers) {
+        codeSession.activeUsers.push(
+          {
+            _id: req.user.id,
+            firstName: req.user.firstName,
+            lastName: req.user.lastName,
+            school: req.user.school
+          }
+        );
+      }
+
       // student is beginning his own session, so always allow him to
       if (req.user.id.toString() == codeSession.user.toString()) {
         // render session page with locals

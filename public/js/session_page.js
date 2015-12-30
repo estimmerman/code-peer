@@ -68,13 +68,16 @@ $(document).on('ready', function(){
 	socket.on('update-language', function(lang) {
 		updateLanguage(lang);
 	});
+
 	// event handler for a user joining the session, prints message to chat area
-	socket.on('user-connected', function(name, colors) {
+	socket.on('user-connected', function(user_id, name, colors) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.');
+		updateActiveUsers(user_id, name, colors, true);
 	});
 	// event handler for a user leaving the sesion, prints message to chat area
-	socket.on('user-disconnected', function(name, colors) {
+	socket.on('user-disconnected', function(user_id, name, colors) {
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.');
+		updateActiveUsers(user_id, null, null, false);
 	});
 	// event handler for the owner of a session leaving, to force other users in the session to leave
 	socket.on('owner-disconnected', function() {
@@ -202,6 +205,29 @@ $(document).on('ready', function(){
 			receivingChange = false;
 		}
 	});
+
+	var activeUsersList = $('#active-users');
+	// adds or removes a user from the active users list
+	// if toAdd is false, it removes the specified user from the list
+	var updateActiveUsers = function(user_id, name, toAdd) {
+		if(toAdd && $('#user-' + user_id).length == 0){
+			activeUsersList.append(
+				'<li id=user-' + user_id + ' style="margin-left: -20px;">' +
+					'<i class="fa fa-icon fa-user" style="color: black">' +
+						'<span style="margin-left: 5px;">' + name + '</span>' + 
+					'</i>' +
+				'</li>'
+			);
+		} else if (!toAdd && $('#user-' + user_id).length != 0){
+			$('#user-' + user_id).remove();
+		}
+	}
+
+	// populate active users list upon session joining
+	for(var i = 0; i < session.activeUsers.length; i++) {
+		var activeUser = session.activeUsers[i];
+		updateActiveUsers(activeUser._id, activeUser.firstName, true);
+	}
 
 	// appends a message to the chat area and scrolls to bottom if there is overflow
 	var updateChat = function(msg) {
