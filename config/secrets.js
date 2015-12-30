@@ -1,10 +1,7 @@
-// secrets file for the project
-// although if I was running this in production I would save all secrets
-// to environment variables on my OS, for the purposes of testing the sending
-// emails capability of the project on development, I have explicitly given the API tokens
-// for my SendGrid account below
-// 
-// I trust testers of this application won't use these tokens for themselves.
+// model secrets file
+// the MongoDB database name can be whatever you want, by default MongoDB uses 'test'
+// session secret is arbitrary
+// API tokens/passwords listed will NOT work, they are purely for example
 module.exports = {
 
   db: process.env.MONGODB || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/code-peer',
