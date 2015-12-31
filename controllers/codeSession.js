@@ -64,11 +64,16 @@ exports.getSession = function(req, res) {
           if (err) return next(err);
           // if user is in another session, don't allow them to join a second one
           if (activeSession && codeSession.shortCode != activeSession.shortCode) {
-            req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
-            return res.redirect('back');
+            if (activeSession.user.toString() == req.user.id.toString()) {
+              req.flash('errors', {msg: 'You must end your session before entering another one.'});
+              return res.redirect('/');
+            } else {
+              req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
+              return res.redirect('/');
+            }
           }
 
-          // if the session isn't active, tutor can't join it
+          // if the session isn't active, user can't join it
           if (!codeSession.active) {
             req.flash('errors', {msg: 'This user is not currently in a session.'});
             return res.redirect('/');
@@ -98,27 +103,39 @@ exports.getSession = function(req, res) {
  * Only creates a new session associated with their account if it doesn't exist
  */
 exports.postStartSession = function(req, res, next) {
-  // sees if student has a session already created
-  CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
+  // see if user already has an active session (that's not their own)
+  CodeSession.findOne({ activeUsers: req.user.id })
+  .exec(function (err, currentSession){
     if (err) return next(err);
-    // student has a session associated with account already, so redirect there
-    if (codeSession) {
-      return res.redirect('/session/' + codeSession.shortCode);
-    // no session exists, so create one and redirect to it
-    } else {
-      // new CodeSession model
-      var codeSession = new CodeSession({
-        user: req.user._id,
-        active: false,
-        activeUsers: []
-      });
 
-      // save session and redirect to the new session page
-      codeSession.save(function(err) {
-        if (err) return next(err);
-        return res.redirect('/session/' + codeSession.shortCode);
-      })
+    // don't let them start a session if they're in another one (that isn't their own)
+    if (currentSession && currentSession.user.toString() != req.user._id.toString()) {
+      req.flash('errors', {msg: 'You must leave your active session before starting your own.'});
+      return res.redirect('/');
     }
+
+    // sees if student has a session already created
+    CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
+      if (err) return next(err);
+      // student has a session associated with account already, so redirect there
+      if (codeSession) {
+        return res.redirect('/session/' + codeSession.shortCode);
+      // no session exists, so create one and redirect to it
+      } else {
+        // new CodeSession model
+        var codeSession = new CodeSession({
+          user: req.user._id,
+          active: false,
+          activeUsers: []
+        });
+
+        // save session and redirect to the new session page
+        codeSession.save(function(err) {
+          if (err) return next(err);
+          return res.redirect('/session/' + codeSession.shortCode);
+        })
+      }
+    });
   });
 };
 
@@ -158,7 +175,7 @@ exports.postEndSession = function(req, res, next) {
 /**
  * POST /session/forceLeave
  * Params: shortCode
- * Forces a user/tutor out of a session when the owner ends the session
+ * Forces a user out of a session when the owner ends the session
  * Does not need to alter the CodeSession model since that is handled when the owner ends the session
 */
 exports.postForceLeaveSession = function(req, res, next) {
@@ -193,7 +210,7 @@ exports.postForceLeaveSession = function(req, res, next) {
 /**
  * POST /session/leave
  * Params: shortCode
- * Leaves current session, called by a tutor
+ * Leaves current session, called by a user
 */
 exports.postLeaveSession = function(req, res, next) {
   // gets session by shortcode
@@ -286,8 +303,13 @@ exports.postConnectToSession = function(req, res, next) {
           if (err) return next(err);
           // if user is in another session, don't let them connect to this one
           if (activeSession && codeSession.shortCode != activeSession.shortCode) {
-            req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
-            return res.redirect('/');
+            if (activeSession.user.toString() == req.user.id.toString()) {
+              req.flash('errors', {msg: 'You must end your session before entering another one.'});
+              return res.redirect('/');
+            } else {
+              req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
+              return res.redirect('/');
+            }
           }
 
           // user can only connect to an active session

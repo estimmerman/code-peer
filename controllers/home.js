@@ -15,7 +15,7 @@ exports.index = function(req, res) {
 	CodeSession.findOne({ user: req.user._id }, function (err, codeSession) {
 	    if (err) return next(err);
 
-		// query filters for the sessions the tutor will see
+		// query filters for the sessions the user will see
 		var queryFilters = {
 			'activeUsers': 'this.activeUsers',
 			'timeOrder': null
@@ -32,44 +32,65 @@ exports.index = function(req, res) {
 		} else {
 			queryFilters.timeOrder = 'asc';
 		}
-		// query for sessions given filters
-		// session must be active
-		// a session with 0 active users will never be active
-		CodeSession.find({ active: true, $where: queryFilters.activeUsers })
+
+		// see if user already has an active session (that's not their own)
+		CodeSession.findOne({ activeUsers: req.user.id })
+		// .populate is the equivalent of a JOIN TABLE in SQL, joins these user fields into the session model returned
 		.populate('user', 'firstName lastName school')
-		.sort({lastStartTime: queryFilters.timeOrder})
-		.exec(function (err, codeSessions) {
+		.exec(function (err, currentSession){
 			if (err) return next(err);
+			// sees if there is an active session for the user, and adds it to an array
+			// only if the active session is not their own
+			var activeSession = [];
+			if (currentSession && currentSession.user.id != req.user.id) {
+				activeSession.push(currentSession);
+				activeSession[0].minutesStartedAgo = helpers.getMinutesFromSessionStart(activeSession[0]);
+			}
 
-			// set the minutes since the session started for each
-			// given the helper method from helpers.js
-			codeSessions.forEach(function (session) {
-				session.minutesStartedAgo = helpers.getMinutesFromSessionStart(session);
-			});
+			// query for sessions given filters
+			// session must be active
+			// a session with 0 active users will never be active
+			CodeSession.find({ active: true, $where: queryFilters.activeUsers })
+			.populate('user', 'firstName lastName school')
+			.sort({lastStartTime: queryFilters.timeOrder})
+			.exec(function (err, codeSessions) {
+				if (err) return next(err);
 
-			// filter out active session from main list so it only appears once
-			if (codeSession) {
-				for (var i = 0; i < codeSessions.length; i++) {
-					if (codeSessions[i].id == codeSession.id) {
-						codeSessions.splice(i, 1);
+				// set the minutes since the session started for each
+				// given the helper method from helpers.js
+				codeSessions.forEach(function (session) {
+					session.minutesStartedAgo = helpers.getMinutesFromSessionStart(session);
+				});
+
+				// filter out own session from main list so it only appears once
+				if (codeSession) {
+					for (var i = 0; i < codeSessions.length; i++) {
+						if (codeSessions[i].id == codeSession.id) {
+							codeSessions.splice(i, 1);
+						}
+						if (activeSession.length > 0 && codeSessions[i].id == activeSession[0].id) {
+							codeSessions.splice(i, 1);
+						}
 					}
 				}
-			}
 
-			// render user home page with sessions
-			if (codeSession) {
-				res.render('home', {
-					title: 'Home',
-					codeSessions: codeSessions,
-					activeSession: codeSession.active
-				});
-			} else {
-				res.render('home', {
-					title: 'Home',
-					codeSessions: codeSessions,
-					activeSession: false
-				});
-			}
+				// render user home page with sessions
+				if (codeSession) {
+					res.render('home', {
+						title: 'Home',
+						codeSessions: codeSessions,
+						ownSessionIsActive: codeSession.active,
+						activeSession: activeSession
+					});
+				} else {
+					res.render('home', {
+						title: 'Home',
+						codeSessions: codeSessions,
+						ownSessionIsActive: false,
+						activeSession: activeSession
+					});
+				}
+			});
 		});
 	});
 };

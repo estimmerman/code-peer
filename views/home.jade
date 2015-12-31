@@ -9,14 +9,19 @@ block content
 			input(type='hidden', name='_csrf', value=_csrf)
 			button.btn.btn-lg.btn-primary(type='submit')
 				i.fa.fa-share-alt
-				if activeSession
+				if ownSessionIsActive
 					| Resume Session
 				else
 					| Begin Session
 	.col-sm-12.m-bottom-15(style='margin-top: 50px')
 		h1.text-center(style='margin-bottom: 25px;') Join a Student Session
 		.session-list
+			if activeSession.length > 0
+				h3.text-center Your Active Session
+				+session_list(activeSession)
+				if codeSessions.length > 0
+					hr
 			if codeSessions.length > 0
 				+session_list(codeSessions)
-			else
+			else if activeSession.length == 0
 				h3.text-center No Active Sessions
