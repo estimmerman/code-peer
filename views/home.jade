@@ -1,4 +1,5 @@
-extends ../layout
+extends layout
+include mixins/session_list
 
 block content
 	.col-sm-12.m-bottom-15(style='margin-top: 150px')
@@ -12,3 +13,10 @@ block content
 					| Resume Session
 				else
 					| Begin Session
+	.col-sm-12.m-bottom-15(style='margin-top: 50px')
+		h1.text-center(style='margin-bottom: 25px;') Join a Student Session
+		.session-list
+			if codeSessions.length > 0
+				+session_list(codeSessions)
+			else
+				h3.text-center No Active Sessions

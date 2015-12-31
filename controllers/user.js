@@ -102,7 +102,6 @@ exports.postSignup = function(req, res, next) {
   // validation of input
   req.assert('firstName', 'You must enter a first name.').notEmpty();
   req.assert('lastName', 'You must enter a last name.').notEmpty();
-  req.assert('role', 'You must choose an account type.').notEmpty();
   req.assert('school', 'You must enter a school.').notEmpty();
 
   req.assert('email', 'Email is not valid.').isEmail();
@@ -121,7 +120,6 @@ exports.postSignup = function(req, res, next) {
   var user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    role: req.body.role,
     school: req.body.school,
     email: req.body.email.toLowerCase(),
     password: req.body.password

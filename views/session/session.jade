@@ -75,7 +75,7 @@ block content
 					each val, key in languages
 						option(value=val)= key
 			.col-sm-6.m-top-20
-				if isStudent
+				if isOwner
 					form.form-horizontal(id='end-session-form', action='/session/end', method='POST')
 						input(type='hidden', name='_csrf', value=_csrf)
 						input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')

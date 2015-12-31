@@ -10,9 +10,6 @@ var userSchema = new mongoose.Schema({
   lastName: { type: String, require: true },
   about: String,
 
-  // 0 --> student (default)
-  // 1 --> tutor
-  role: { type: Number, require: true, default: 0 },
   school: { type: String, require: true },
 
   // user settings - themes and filters

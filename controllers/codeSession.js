@@ -48,25 +48,21 @@ exports.getSession = function(req, res) {
         );
       }
 
-      // student is beginning his own session, so always allow him to
+      // user is beginning his own session, so always allow them to
       if (req.user.id.toString() == codeSession.user.toString()) {
         // render session page with locals
         return res.render('session/session', {
           title: 'Session',
           codeSession: codeSession,
-          isStudent: true,
+          isOwner: true,
           languages: constants.LANGUAGES
         });
       // another student trying to access session shouldn't be allowed
-      } else if (req.user.role == 0) {
-        req.flash('errors', {msg: 'You must be a tutor to join this session!'});
-        return res.redirect('/');
-      // tutor trying to join session
       } else {
-        // checks to see if tutor is already part of another session
+        // checks to see if user is already part of another session
         CodeSession.findOne({ activeUsers: req.user.id }, function (err, activeSession) {
           if (err) return next(err);
-          // if tutor is in another session, don't allow them to join a second one
+          // if user is in another session, don't allow them to join a second one
           if (activeSession && codeSession.shortCode != activeSession.shortCode) {
             req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
             return res.redirect('back');
@@ -74,7 +70,7 @@ exports.getSession = function(req, res) {
 
           // if the session isn't active, tutor can't join it
           if (!codeSession.active) {
-            req.flash('errors', {msg: 'This student is not currently in a session.'});
+            req.flash('errors', {msg: 'This user is not currently in a session.'});
             return res.redirect('/');
           }
 
@@ -82,7 +78,7 @@ exports.getSession = function(req, res) {
           return res.render('session/session', {
             title: 'Session',
             codeSession: codeSession,
-            isStudent: false,
+            isOwner: false,
             languages: constants.LANGUAGES
           });
         });
@@ -284,28 +280,23 @@ exports.postConnectToSession = function(req, res, next) {
             // return json response
             return res.send(response);
         })
-      // student can't join another student's session
-      } else if (req.user.role == 0) {
-        req.flash('errors', {msg: 'You must be a tutor to join this session!'});
-        return res.redirect('/');
-      // tutor trying to join session
       } else {
-        // see if tutor is is another session
+        // see if user is is another session
         CodeSession.findOne({ activeUsers: req.user.id }, function (err, activeSession) {
           if (err) return next(err);
-          // if tutor is in another session, don't let them connect to this one
+          // if user is in another session, don't let them connect to this one
           if (activeSession && codeSession.shortCode != activeSession.shortCode) {
             req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
             return res.redirect('/');
           }
 
-          // tutor can only connect to an active session
+          // user can only connect to an active session
           if (!codeSession.active) {
             req.flash('errors', {msg: 'This student is not currently in a session.'});
             return res.redirect('/');
           }
 
-          // add tutor to active users if not part of them
+          // add user to active users if not part of them
           if (idIndex == -1){
             codeSession.activeUsers.push(req.user._id);
           }
