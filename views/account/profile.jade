@@ -2,10 +2,7 @@ extends ../layout
 
 block content
   .page-header
-    if user.role == 0
-      h3 Student Account Manager
-    else
-      h3 Tutor Account Manager
+    h3 Account Manager
 
   form.form-horizontal(action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)

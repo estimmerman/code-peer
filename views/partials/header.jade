@@ -13,7 +13,7 @@
       ul.nav.navbar-nav
         li(class=title=='Home'?'active':undefined)
           a(href='/') Home
-      if user && user.role == 1 && path == '/home'
+      if user && path == '/home'
         ul.nav.navbar-nav
           li.dropdown(class=title=='Filters'?'active':undefined)
               a.dropdown-toggle(href='#', data-toggle='dropdown')
