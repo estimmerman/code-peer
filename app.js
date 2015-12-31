@@ -203,6 +203,10 @@ io.on('connection', function(socket) {
     // broadcasts to other users in that room that this user has connected to the session
     socket.broadcast.to(socket.shortCode).emit('user-connected', socket.user_id, socket.name, socket.colors); 
   });
+  // broadcasts a kick user event to kick the specified user from the session
+  socket.on('send-kick-user', function(user_id) {
+    socket.broadcast.to(socket.shortCode).emit('kick-user', user_id);
+  });
   // event listener for owner ending session
   socket.on('owner-disconnecting', function() {
     // if the owner of a session purposefully ends it, kick all other uses out of the room

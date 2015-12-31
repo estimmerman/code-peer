@@ -366,3 +366,15 @@ a:hover {
 .hidden {
   visibility: hidden;
 }
+
+#active-users i {
+  color: black;
+}
+
+#active-users i.fa-close {
+  color: #A41034;
+}
+
+.cursor {
+  cursor: pointer;
+}

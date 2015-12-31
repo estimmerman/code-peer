@@ -394,8 +394,18 @@ a:hover {
   visibility: hidden;
 }
 
+#active-users {
+  i {
+    color: black;
+  }
 
+  i.fa-close {
+    color: $crimson;
+  }
+}
 
-
+.cursor {
+  cursor: pointer;
+}
 
 

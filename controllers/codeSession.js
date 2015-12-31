@@ -166,8 +166,32 @@ exports.postEndSession = function(req, res, next) {
  * Does not need to alter the CodeSession model since that is handled when the owner ends the session
 */
 exports.postForceLeaveSession = function(req, res, next) {
-  req.flash('errors', { msg: 'The owner has ended the session.' });
-  return res.redirect('/');
+  if (!req.body.reason || req.body.reason == 'default') {
+      req.flash('errors', { msg: 'The owner has ended the session.' });
+      return res.redirect('/');
+  } else {
+      // if user is being kicked, remove them from activeUsers first
+      CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
+        if (err) {
+          return res.redirect('back');
+        }
+        // validates existence of session
+        if (codeSession) {
+          // remove user from active users
+          var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
+          if (idIndex != -1){
+            codeSession.activeUsers.splice(idIndex, 1);
+          }
+          codeSession.save(function(err) {
+            if (err) {
+              return res.redirect('back');
+            }
+            req.flash('errors', { msg: 'You have been kicked from the session.' });
+            return res.redirect('/');
+          });
+        }
+      });
+  }
 }
 
 /**

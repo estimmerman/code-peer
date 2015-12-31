@@ -31,6 +31,9 @@ $(document).on('ready', function(){
 	$('#chat-' + user.chatTheme + '-check').removeClass('hidden');
 	$('#editor-' + user.editorTheme + '-check').removeClass('hidden');
 
+	// determine if session user is the owner of the session
+	var isOwner = user._id.toString() == session.user.toString();
+
 	// have enter key submit chat message if focused on chat-box
 	$(document).delegate('#chat-box', 'keydown', function(e){
 		var keyCode = e.keyCode || e.which;
@@ -79,12 +82,29 @@ $(document).on('ready', function(){
 		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.');
 		updateActiveUsers(user_id, null, null, false);
 	});
+	// event handler for a user getting kicked from the session
+	socket.on('kick-user', function(user_id) {
+		// only kick user if this is the correct one
+		if (user_id == user._id.toString()) {
+			forceLeave('kick');
+		}
+	});
 	// event handler for the owner of a session leaving, to force other users in the session to leave
 	socket.on('owner-disconnected', function() {
 		// there is a hidden form in session.jade which is submitted, calling
 		// a POST to forceLeave
-		$('#force-leave-button').click();
+		forceLeave('default');
 	});
+
+	var forceLeave = function(reason) {
+		if (reason == 'default') {
+			$("#force-leave-default").prop("checked", true);
+		} else  if (reason == 'kick') {
+			$("#force-leave-kick").prop("checked", true);
+		}
+		$('#force-leave-button').click();
+	}
+
 	// this is an event handler for the original socket to receive back when initializing
 	// the socket originally
 	// is only received once upon initialization
@@ -211,20 +231,36 @@ $(document).on('ready', function(){
 	// if toAdd is false, it removes the specified user from the list
 	var updateActiveUsers = function(user_id, name, toAdd) {
 		if(toAdd && $('#user-' + user_id).length == 0){
-			activeUsersList.append(
-				'<li id=user-' + user_id + ' style="margin-left: -20px;">' +
-					'<i class="fa fa-icon fa-user" style="color: black">' +
-						'<span style="margin-left: 5px;">' + name + '</span>' + 
-					'</i>' +
-				'</li>'
-			);
+			// if it's the owner, then have a kick user option next to each name
+			// can't kick yourself
+			if (isOwner && user_id != user._id.toString()){
+				activeUsersList.append(
+					'<li id="user-' + user_id + '" style="margin-left: -20px;">' +
+						'<i class="fa fa-icon fa-user">' +
+							'<span style="margin-left: 5px;">' + name + '</span>' + 
+						'</i>' +
+						'<i id="kick-user-' + user_id + '" class="fa fa-close pull-right cursor"></i>' +
+					'</li>'
+				);
+				$('#kick-user-' + user_id).on('click', function() {
+					socket.emit('send-kick-user', user_id);
+				});
+			} else {
+				activeUsersList.append(
+					'<li id=user-' + user_id + ' style="margin-left: -20px;">' +
+						'<i class="fa fa-icon fa-user" style="color: black">' +
+							'<span style="margin-left: 5px;">' + name + '</span>' + 
+						'</i>' +
+					'</li>'
+				);
+			}
 		} else if (!toAdd && $('#user-' + user_id).length != 0){
 			$('#user-' + user_id).remove();
 		}
 	}
 
 	// populate active users list upon session joining
-	for(var i = 0; i < session.activeUsers.length; i++) {
+	for (var i = 0; i < session.activeUsers.length; i++) {
 		var activeUser = session.activeUsers[i];
 		updateActiveUsers(activeUser._id, activeUser.firstName, true);
 	}

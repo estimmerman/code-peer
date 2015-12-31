@@ -113,6 +113,8 @@ block content
 			form(id='force-leave-form', action='/session/forceLeave', method='POST')
 				input(type='hidden', name='_csrf', value=_csrf)
 				input(type='hidden', name='shortCode', value='#{codeSession.shortCode}')
+				input.hidden(type='radio', name='reason', id='force-leave-default', value='default')
+				input.hidden(type='radio', name='reason', id='force-leave-kick', value='kick')
 				button(type='submit', id='force-leave-button')
 
 	script(type='text/javascript').
