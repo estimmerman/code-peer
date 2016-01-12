@@ -8,6 +8,7 @@ var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
+var CodeSession = require('../models/CodeSession');
 var secrets = require('../config/secrets');
 
 /**
@@ -73,8 +74,29 @@ exports.postLogin = function(req, res, next) {
  */
 exports.logout = function(req, res) {
   // ends the session, and redirects to login page
-  req.logout();
-  res.redirect('/login');
+
+  // if user has an active session, deactive it and remove activeUsers
+  if (req.user) {
+    CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
+      if (err) return next(err);
+
+      if (codeSession) {
+        codeSession.active = false;
+        codeSession.activeUsers = [];
+        codeSession.save(function(err) {
+          if (err) return next(err);
+          req.logout();
+          return res.redirect('/login');
+        });
+      } else {
+        req.logout();
+        return res.redirect('/login');
+      }
+    });
+  } else {
+    req.logout();
+    return res.redirect('/login');
+  }
 };
 
 /**
