@@ -123,25 +123,32 @@ exports.postStartSession = function(req, res, next) {
     // sees if user has a session already created
     CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
       if (err) return next(err);
+
+      var maxActiveUsers = null;
+      var noLimitOnActiveUsers = null;
+      var private = null;
+
+      if (!req.body.isResume) {
+        // if a user is starting a session again, they provide new settings, update them below
+        maxActiveUsers = req.body.maxActiveUsers || constants.CODESESSION_DEFAULTS.maxActiveUsers;
+        noLimitOnActiveUsers = req.body.noLimitOnActiveUsers ? true : constants.CODESESSION_DEFAULTS.noLimitOnActiveUsers;
+        private = req.body.isPrivate ? true : constants.CODESESSION_DEFAULTS.isPrivate;
+      }
+
       // user has a session associated with account already, so redirect there
       if (codeSession) {
         if (req.body.isResume) {
           return res.redirect('/session/' + codeSession.shortCode);
         } else {
-          // if a user is starting a session again, they provide new settings, update them below
-          var maxActiveUsers = req.body.maxActiveUsers || constants.CODESESSION_DEFAULTS.maxActiveUsers;
-          var noLimitOnActiveUsers = req.body.noLimitOnActiveUsers ? true : constants.CODESESSION_DEFAULTS.noLimitOnActiveUsers;
-          var isPrivate = req.body.isPrivate ? true : constants.CODESESSION_DEFAULTS.isPrivate;
-
           var settings = codeSession.settings;
           settings.noLimitOnActiveUsers = noLimitOnActiveUsers;
           // only update max active users if there is a limit
           if (!noLimitOnActiveUsers) {
             settings.maxActiveUsers = Math.round(maxActiveUsers);
           }
-          settings.private = isPrivate;
+          settings.private = private;
           // generates a new private key for the session if it is private
-          if (isPrivate) {
+          if (private) {
             // generate private key
           }
           codeSession.settings = settings;
@@ -155,11 +162,21 @@ exports.postStartSession = function(req, res, next) {
         }
       // no session exists, so create one and redirect to it
       } else {
+        if (req.body.isResume) {
+          req.flash('errors', {msg: 'You cannot resume a session that has never been created in the first place.'});
+          return res.redirect('/');
+        }
+
         // new CodeSession model
         var codeSession = new CodeSession({
           user: req.user._id,
           active: false,
-          activeUsers: []
+          activeUsers: [],
+          settings: {
+            maxActiveUsers: maxActiveUsers,
+            noLimitOnActiveUsers: noLimitOnActiveUsers,
+            private: private
+          }
         });
 
         // save session and redirect to the new session page
