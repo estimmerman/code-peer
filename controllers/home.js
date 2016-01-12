@@ -4,6 +4,7 @@
 
 var CodeSession = require('../models/CodeSession');
 var helpers = require('../helpers/helpers');
+var constants = require('../helpers/constants');
 
 /**
  * GET /home
@@ -79,14 +80,14 @@ exports.index = function(req, res) {
 					res.render('home', {
 						title: 'Home',
 						codeSessions: codeSessions,
-						ownSessionIsActive: codeSession.active,
+						ownSession: codeSession,
 						activeSession: activeSession
 					});
 				} else {
 					res.render('home', {
 						title: 'Home',
 						codeSessions: codeSessions,
-						ownSessionIsActive: false,
+						ownSession: null,
 						activeSession: activeSession
 					});
 				}

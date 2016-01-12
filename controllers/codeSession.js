@@ -25,12 +25,13 @@ exports.getSession = function(req, res) {
       codeSession.activeUsers.forEach(function(user) {
         activeUsersIds.push(user.id);
       });
-
+      
+      // users helper method getIdIndexInArray from helpers.js to see if user.id is in the activeUsers of the session
       var userInActiveUsers = helpers.getIdIndexInArray(req.user._id, activeUsersIds) != -1;
 
-      // if activeUsers for session is 2 or more, and the user trying to access it isn't one of them, session is full
-      // users helper method getIdIndexInArray from helpers.js to see if user.id is in the activeUsers of the session
-      if (codeSession.activeUsers.length >= 2 && !userInActiveUsers) {
+      // if a max users limit exists and
+      // if activeUsers for session is more than the specified amount, and the user trying to access it isn't one of them, session is full
+      if (!codeSession.settings.noLimitOnActiveUsers && codeSession.activeUsers.length >= codeSession.settings.maxActiveUsers && !userInActiveUsers) {
         req.flash('errors', {msg: 'This session is full!'});
         return res.redirect('/');
       }
@@ -103,6 +104,11 @@ exports.getSession = function(req, res) {
  * Only creates a new session associated with their account if it doesn't exist
  */
 exports.postStartSession = function(req, res, next) {
+  if (req.body.isResume === undefined) {
+    req.flash('errors', {msg: 'Bad parameters.'});
+    return res.redirect('/');
+  }
+
   // see if user already has an active session (that's not their own)
   CodeSession.findOne({ activeUsers: req.user.id })
   .exec(function (err, currentSession){
@@ -114,12 +120,39 @@ exports.postStartSession = function(req, res, next) {
       return res.redirect('/');
     }
 
-    // sees if student has a session already created
+    // sees if user has a session already created
     CodeSession.findOne({ user: req.user._id }, function(err, codeSession) {
       if (err) return next(err);
-      // student has a session associated with account already, so redirect there
+      // user has a session associated with account already, so redirect there
       if (codeSession) {
-        return res.redirect('/session/' + codeSession.shortCode);
+        if (req.body.isResume) {
+          return res.redirect('/session/' + codeSession.shortCode);
+        } else {
+          // if a user is starting a session again, they provide new settings, update them below
+          var maxActiveUsers = req.body.maxActiveUsers || constants.CODESESSION_DEFAULTS.maxActiveUsers;
+          var noLimitOnActiveUsers = req.body.noLimitOnActiveUsers ? true : constants.CODESESSION_DEFAULTS.noLimitOnActiveUsers;
+          var isPrivate = req.body.isPrivate ? true : constants.CODESESSION_DEFAULTS.isPrivate;
+
+          var settings = codeSession.settings;
+          settings.noLimitOnActiveUsers = noLimitOnActiveUsers;
+          // only update max active users if there is a limit
+          if (!noLimitOnActiveUsers) {
+            settings.maxActiveUsers = Math.round(maxActiveUsers);
+          }
+          settings.private = isPrivate;
+          // generates a new private key for the session if it is private
+          if (isPrivate) {
+            // generate private key
+          }
+          codeSession.settings = settings;
+          codeSession.markModified('settings');
+
+          // save session and redirect to the new session page
+          codeSession.save(function(err) {
+            if (err) return next(err);
+            return res.redirect('/session/' + codeSession.shortCode);
+          })
+        }
       // no session exists, so create one and redirect to it
       } else {
         // new CodeSession model
@@ -260,8 +293,10 @@ exports.postConnectToSession = function(req, res, next) {
     // validates existenc of session
     if (codeSession) {
       var idIndex = helpers.getIdIndexInArray(req.user.id, codeSession.activeUsers);
-      // if session is full and the user connecting isn't one of the active users, show erro
-      if (codeSession.activeUsers.length >= 2 && idIndex == -1) {
+
+      // if a max users limit exists and
+      // if activeUsers for session is more than the specified amount, and the user trying to access it isn't one of them, session is full
+      if (!codeSession.settings.noLimitOnActiveUsers && codeSession.activeUsers.length >= codeSession.settings.maxActiveUsers && idIndex == -1) {
         req.flash('errors', {msg: 'This session is full!'});
         return res.redirect('/');
       }

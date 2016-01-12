@@ -23,6 +23,11 @@ var codeSessionSchema = new mongoose.Schema({
   code: { type: String, default: 'Your code goes here!' },
   // the saved language for the session
   language: { type: String, default: 'text/x-csrc' },
+  // various settings for the session
+  // if maxActive == -1, then there is no max
+  settings: { type: Object, default: { 'maxActiveUsers' : 2, 'noLimitOnActiveUsers' : false, 'private' : false } },
+  // key required to join this session if it's private, will be regenerated each time a new private session is begun
+  privateKey: { type: String, default: null }
 });
 
 // when creating a new CodeSession, I create a unique shortCode for it

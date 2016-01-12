@@ -5,14 +5,15 @@ block content
 	.col-sm-12.m-bottom-15(style='margin-top: 150px')
 		h1.text-center(style='font-size: 50px;') Start Collaborating Now
 	.col-sm-12.text-center.m-top-15
-		form.form-horizontal(id='begin-session-form', action='/session/start', method='POST')
-			input(type='hidden', name='_csrf', value=_csrf)
-			button.btn.btn-lg.btn-primary(type='submit')
-				i.fa.fa-share-alt
-				if ownSessionIsActive
+		if ownSession && ownSession.active
+			form.form-horizontal(id='resume-session-form', action='/session/start', method='POST')
+				input(type='hidden', name='_csrf', value=_csrf)
+				input(type='hidden', name='isResume', value=true)
+				button.btn.btn-lg.btn-primary(type='submit')
+					i.fa.fa-share-alt
 					| Resume Session
-				else
-					| Begin Session
+		else
+			button.btn.btn-lg.btn-primary(data-toggle="modal", href="#beginSessionModal", id='openBeginSessionModal') Begin Session
 	.col-sm-12.m-bottom-15(style='margin-top: 50px')
 		h1.text-center(style='margin-bottom: 25px;') Join a Student Session
 		.session-list
@@ -25,3 +26,36 @@ block content
 				+session_list(codeSessions)
 			else if activeSession.length == 0
 				h3.text-center No Active Sessions
+	div.modal.fade(id="beginSessionModal", tabindex='-1', role='dialog', aria-labelledby='beginSessionModalLabel')
+		.modal-dialog(role='document')
+			.modal-content
+				form.form-horizontal(id='begin-session-form', action='/session/start', method='POST')
+					.modal-header
+						button.close(data-dismiss='modal', aria-label='Close')
+							span(aria-hidden='true') &times;
+						h4.modal-title(id='beginSessionModalLabel') Begin Session
+					.modal-body
+						.form-group
+							.col-sm-12
+								.col-sm-9
+									label.control-label(for='maxActiveUsers') Maximum # of Active Users
+									input.form-control(type='number', name='maxActiveUsers', id='maxActiveUsers', min=2, required)
+								.col-sm-3
+									label.control-label(for='noLimitOnActiveUsers') No Maximum
+									br
+									input(type='checkbox', name='noLimitOnActiveUsers', id='noLimitOnActiveUsers')
+							.col-sm-12
+								.col-sm-3
+									label.control-label(for='isPrivate') Private Session
+									br
+									input(type='checkbox', name='isPrivate', id='isPrivate')
+
+					.modal-footer
+						button.btn.btn-default.btn-primary-padding(type='button', data-dismiss='modal') Cancel
+						input(type='hidden', name='_csrf', value=_csrf)
+						input(type='hidden', name='isResume', value=false)
+						button.btn.btn-primary.m-left-5(type='submit') Begin
+
+	script(type='text/javascript').
+		var ownSession = !{JSON.stringify(ownSession)};
+	script(src='/js/home_page.js')

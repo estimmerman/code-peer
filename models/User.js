@@ -15,8 +15,8 @@ var userSchema = new mongoose.Schema({
   // user settings - themes and filters
   chatTheme: { type: String, require: true, default: 'default' },
   editorTheme: { type: String, require: true, default: 'default' },
-  // filters only used for tutors when choosing how to view the list of sessions
-  filterSettings: { type: Object, default: {'showFull' : false, 'timeOrder' : 'new'} },
+  // filters used when choosing how to view the list of sessions
+  filterSettings: { type: Object, default: { 'showFull' : false, 'timeOrder' : 'new' } },
 
   // login information
   email: { type: String, require: true, unique: true, lowercase: true },

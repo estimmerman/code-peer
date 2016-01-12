@@ -40,5 +40,12 @@ module.exports = Object.freeze({
 		'SQL' : 'text/x-sql',
 		'Swift' : 'text/x-swift',
 		'XML' : 'application/xml'
+	},
+	CODESESSION_DEFAULTS : {
+		active: false,
+		activeUsers: [],
+		maxActiveUsers: 2,
+		noLimitOnActiveUsers: false,
+		isPrivate: false
 	}
 });
