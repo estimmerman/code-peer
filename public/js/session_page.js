@@ -122,8 +122,6 @@ $(document).on('ready', function(){
 			// nothing to do here
 		});
 	});
-	// initializes socket and it's locals regarding the user and the session
-	socket.emit('set-user', user._id.toString(), user.firstName, session.shortCode, session.user.toString());
 
 	// bools to check if a code change was made in this client or was received through the socket
 	var receivingChange = false;
@@ -259,12 +257,6 @@ $(document).on('ready', function(){
 		}
 	}
 
-	// populate active users list upon session joining
-	for (var i = 0; i < session.activeUsers.length; i++) {
-		var activeUser = session.activeUsers[i];
-		updateActiveUsers(activeUser._id, activeUser.firstName, true);
-	}
-
 	// appends a message to the chat area and scrolls to bottom if there is overflow
 	var updateChat = function(msg) {
 		chat = $('#chat');
@@ -340,5 +332,19 @@ $(document).on('ready', function(){
 			default:
 				return colors.default;
 		}
+	}
+
+	// gets the display name given a user's first and last name
+	var getDisplayName = function(firstName, lastName) {
+		return firstName + ' ' + lastName.substring(0,1);
+	}
+
+	// initializes socket and it's locals regarding the user and the session
+	socket.emit('set-user', user._id.toString(), getDisplayName(user.firstName, user.lastName), session.shortCode, session.user.toString());
+
+	// populate active users list upon session joining
+	for (var i = 0; i < session.activeUsers.length; i++) {
+		var activeUser = session.activeUsers[i];
+		updateActiveUsers(activeUser._id, getDisplayName(activeUser.firstName, activeUser.lastName), true);
 	}
 });
