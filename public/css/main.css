@@ -382,3 +382,11 @@ a:hover {
 .cursor {
   cursor: pointer;
 }
+
+.btn-primary-padding {
+  padding: 8px 15px;
+}
+
+.modal {
+  color: black;
+}
