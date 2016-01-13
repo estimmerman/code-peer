@@ -51,7 +51,7 @@ block content
 
 	div
 		.col-sm-9
-			.col-sm-6.m-top-15
+			.col-sm-4.m-top-15
 				label.control-label.pull-left(for='codemirror') Coding Area
 				div.pull-left(style='margin-left: -30px;')
 					ul
@@ -60,7 +60,11 @@ block content
 								i.fa.fa-cog
 							ul.dropdown-menu
 								include ../partials/code_theme_choices.jade
-			.col-sm-6.m-bottom-5
+			.col-sm-8.m-bottom-5
+				if isOwner && codeSession.settings.private && codeSession.privateKey
+					button.btn.btn-sm.btn-danger.pull-right(data-toggle="modal", href="#shareLinkModal", id='openShareLinkModal')
+						i.fa.fa-share
+						| Share Link
 				button.btn.btn-sm.btn-danger.pull-right(id='save-button')
 					| Save
 				div.pull-right.m-right-15.hidden(id='saving-spinner')
@@ -116,6 +120,18 @@ block content
 				input.hidden(type='radio', name='reason', id='force-leave-default', value='default')
 				input.hidden(type='radio', name='reason', id='force-leave-kick', value='kick')
 				button(type='submit', id='force-leave-button')
+
+		div.modal.fade(id="shareLinkModal", tabindex='-1', role='dialog', aria-labelledby='shareLinkModalLabel')
+			.modal-dialog(role='document')
+				.modal-content
+					.modal-header
+						button.close(data-dismiss='modal', aria-label='Close')
+							span(aria-hidden='true') &times;
+						h4.modal-title(id='shareLinkModalLabel') Share Private Link
+					.modal-body
+						p Share the following private link to allow others to join this session.
+						i.fa.fa-clipboard.cursor(id='copyShareLink')
+						p.bold.inline-block http://localhost:3000/session/#{codeSession.shortCode}?key=#{codeSession.privateKey}
 
 	script(type='text/javascript').
 		var user = !{JSON.stringify(user)};

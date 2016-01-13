@@ -24,4 +24,6 @@ $(document).ready(function() {
 	noLimitOnActiveUsers.change(function(){
 		toggleMaxActiveUsersInput(this.checked);
 	});
+
+	$('[data-toggle="tooltip"]').tooltip()
 });

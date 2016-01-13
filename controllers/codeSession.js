@@ -60,6 +60,23 @@ exports.getSession = function(req, res) {
         });
       // another student trying to access session shouldn't be allowed
       } else {
+        // if the session isn't active, user can't join it
+        if (!codeSession.active) {
+          req.flash('errors', {msg: 'This user is not currently in a session.'});
+          return res.redirect('/');
+        }
+
+        // if the session is private, a user must provide the key to join
+        if (codeSession.settings.private) {
+          if (req.query.key === undefined || !req.query.key) {
+            req.flash('errors', {msg: 'This session requires a private key.'});
+            return res.redirect('/');
+          } else if (req.query.key != codeSession.privateKey) {
+            req.flash('errors', {msg: 'Incorrect private key for this session.'});
+            return res.redirect('/');
+          }
+        }
+
         // checks to see if user is already part of another session
         CodeSession.findOne({ activeUsers: req.user.id }, function (err, activeSession) {
           if (err) return next(err);
@@ -72,12 +89,6 @@ exports.getSession = function(req, res) {
               req.flash('errors', {msg: 'You must leave your active session before entering another one.'});
               return res.redirect('/');
             }
-          }
-
-          // if the session isn't active, user can't join it
-          if (!codeSession.active) {
-            req.flash('errors', {msg: 'This user is not currently in a session.'});
-            return res.redirect('/');
           }
 
           // conditions passed, render session page with locals
@@ -145,7 +156,7 @@ exports.postStartSession = function(req, res, next) {
           settings.private = private;
           // generates a new private key for the session if it is private
           if (private) {
-            // generate private key
+            codeSession.privateKey = helpers.generatePrivateKey();
           }
           codeSession.settings = settings;
           codeSession.markModified('settings');

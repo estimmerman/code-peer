@@ -37,3 +37,8 @@ exports.getUsernameColor = function(username, colors) {
 	var index = Math.abs(hash % colors.length);
 	return colors[index];
 }
+
+exports.generatePrivateKey = function() {
+	var characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	return Array(15).join().split(',').map(function() { return characters.charAt(Math.floor(Math.random() * characters.length)); }).join('');
+}

@@ -339,6 +339,10 @@ $(document).on('ready', function(){
 		return firstName + ' ' + lastName.substring(0,1);
 	}
 
+	$('#copyShareLink').on('click', function(){
+		window.prompt('Copy and click enter.', 'http://localhost:3000/session/' + session.shortCode + '?key=' + session.privateKey);
+	});
+
 	// initializes socket and it's locals regarding the user and the session
 	socket.emit('set-user', user._id.toString(), getDisplayName(user.firstName, user.lastName), session.shortCode, session.user.toString());
 

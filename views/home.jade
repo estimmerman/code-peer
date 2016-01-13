@@ -45,11 +45,11 @@ block content
 									br
 									input(type='checkbox', name='noLimitOnActiveUsers', id='noLimitOnActiveUsers')
 							.col-sm-12
-								.col-sm-3
-									label.control-label(for='isPrivate') Private Session
+								.col-sm-12
+									label.control-label.m-right-5(for='isPrivate') Private Session
+									i.fa.fa-info-circle(data-toggle='tooltip', title='Private sessions will not be visible in the session list on the homepage. Once inside the session, you will be given a link to share with others who wish to join your session.')
 									br
 									input(type='checkbox', name='isPrivate', id='isPrivate')
-
 					.modal-footer
 						button.btn.btn-default.btn-primary-padding(type='button', data-dismiss='modal') Cancel
 						input(type='hidden', name='_csrf', value=_csrf)
