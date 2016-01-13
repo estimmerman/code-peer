@@ -510,5 +510,65 @@ exports.postUpdateSessionLanguage = function(req, res, next) {
   });
 }
 
+/**
+ * POST /session/settings/update
+ * Params: maxActiveUsers, noLimitOnActiveUsers, isPrivate, shortCode
+ * Edits a session's settings
+ * Response is JSON
+*/
+exports.postUpdateSessionSettings = function(req, res, next) {
+  CodeSession.findOne({ shortCode: req.body.shortCode }, function(err, codeSession) {
+    if (err) return next(err);
 
+    if (codeSession) {
+      var settings = codeSession.settings;
+      var maxActiveUsers = req.body.maxActiveUsers || constants.CODESESSION_DEFAULTS.maxActiveUsers;
+      var noLimitOnActiveUsers = req.body.noLimitOnActiveUsers ? true : false;
+      var private = req.body.isPrivate ? true : false;
+
+      var privateChanged = false;
+      if (!settings.private && private) {
+        privateChanged = true;
+      }
+
+      if (!noLimitOnActiveUsers) {
+        settings.maxActiveUsers = Math.round(req.body.maxActiveUsers);
+      }
+      settings.noLimitOnActiveUsers = noLimitOnActiveUsers;
+      settings.private = private;
+      if (private && privateChanged) {
+        codeSession.privateKey = helpers.generatePrivateKey();
+      }
+
+      codeSession.settings = settings;
+      codeSession.markModified('settings');
+
+      // save session and redirect to the new session page
+      codeSession.save(function(err) {
+        var response = {};
+        var data = {};
+        if (private && privateChanged) {
+          data.newPrivateKey = codeSession.privateKey;
+        }
+        if (err) {
+          response = {
+            code: 500,
+            msg: 'Issue saving settings changes.'
+          }
+        } else {
+          response = {
+            code: 200,
+            msg: 'Settings updated.',
+            data: data
+          }
+        }
+        return res.send(response);
+      })
+    } else {
+      req.flash('errors', {msg: 'Error with updating session settings.'});
+      return res.redirect('back');
+    }
+
+  });
+}
 

@@ -61,6 +61,7 @@ block content
 							ul.dropdown-menu
 								include ../partials/code_theme_choices.jade
 			.col-sm-8.m-bottom-5
+				button.btn.btn-sm.btn-danger.pull-right(data-toggle='modal', href='#editSessionSettingsModal', id='openEditSessionSettingsModal') Settings
 				if isOwner && codeSession.settings.private && codeSession.privateKey
 					button.btn.btn-sm.btn-danger.pull-right(data-toggle="modal", href="#shareLinkModal", id='openShareLinkModal')
 						i.fa.fa-share
@@ -131,7 +132,36 @@ block content
 					.modal-body
 						p Share the following private link to allow others to join this session.
 						i.fa.fa-clipboard.cursor(id='copyShareLink')
-						p.bold.inline-block http://localhost:3000/session/#{codeSession.shortCode}?key=#{codeSession.privateKey}
+						p.bold.inline-block(id='shareLink') http://localhost:3000/session/#{codeSession.shortCode}?key=#{codeSession.privateKey}
+
+		div.modal.fade(id="editSessionSettingsModal", tabindex='-1', role='dialog', aria-labelledby='editSessionSettingsModalLabel')
+			.modal-dialog(role='document')
+				.modal-content
+					form.form-horizontal(id='edit-session-settings-form', action='/session/settings', method='POST')
+						.modal-header
+							button.close(data-dismiss='modal', aria-label='Close')
+								span(aria-hidden='true') &times;
+							h4.modal-title(id='editSessionSettingsModalLabel') Edit Settings
+						.modal-body
+							.form-group
+								.col-sm-12
+									.col-sm-9
+										label.control-label(for='maxActiveUsers') Maximum # of Active Users
+										input.form-control(type='number', name='maxActiveUsers', id='maxActiveUsers', min=2, required)
+									.col-sm-3
+										label.control-label(for='noLimitOnActiveUsers') No Maximum
+										br
+										input(type='checkbox', name='noLimitOnActiveUsers', id='noLimitOnActiveUsers')
+								.col-sm-12
+									.col-sm-12
+										label.control-label.m-right-5(for='isPrivate') Private Session
+										i.fa.fa-info-circle(data-toggle='tooltip', title='Private sessions will not be visible in the session list on the homepage. You can find the private link to share with others by clicking the \'Share Link\' button in your session.')
+										br
+										input(type='checkbox', name='isPrivate', id='isPrivate')
+						.modal-footer
+							button.btn.btn-default.btn-primary-padding(type='button', data-dismiss='modal') Cancel
+							input(type='hidden', name='_csrf', value=_csrf)
+							button.btn.btn-primary.m-left-5(type='submit') Save
 
 	script(type='text/javascript').
 		var user = !{JSON.stringify(user)};

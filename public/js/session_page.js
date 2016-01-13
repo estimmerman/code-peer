@@ -343,6 +343,82 @@ $(document).on('ready', function(){
 		window.prompt('Copy and click enter.', 'http://localhost:3000/session/' + session.shortCode + '?key=' + session.privateKey);
 	});
 
+	/*
+		Start edit session settings
+	*/
+
+	var maxActiveUsers = $('#maxActiveUsers');
+	var noLimitOnActiveUsers = $('#noLimitOnActiveUsers');
+	var sessionSettingsForm = $('#edit-session-settings-form');
+	var sessionSettingsModal = $('#editSessionSettingsModal')
+	var shareLinkButton = $('#openShareLinkModal');
+	var shareLink = $('#shareLink');
+
+	function toggleMaxActiveUsersInput(noLimit) {
+		if(noLimit) {
+			maxActiveUsers.prop('disabled', true);
+		} else {
+			maxActiveUsers.prop('disabled', false);
+		}
+	}
+
+	$('#openEditSessionSettingsModal').on('click', function(){
+		if (session !== null){
+			maxActiveUsers.val(session.settings.maxActiveUsers);
+			noLimitOnActiveUsers.prop('checked', session.settings.noLimitOnActiveUsers);
+			toggleMaxActiveUsersInput(session.settings.noLimitOnActiveUsers);
+			$('#isPrivate').prop('checked', session.settings.private);
+		} else {
+			maxActiveUsers.val(2);
+		}
+	});
+
+	noLimitOnActiveUsers.change(function(){
+		toggleMaxActiveUsersInput(this.checked);
+	});
+
+	sessionSettingsForm.on('submit', function(e){
+		e.preventDefault();
+		var values = {};
+		$.each(sessionSettingsForm.serializeArray(), function(i, field) {
+		    values[field.name] = field.value;
+		});
+		$.post('/session/settings/update', { 
+			maxActiveUsers: values.maxActiveUsers, 
+			noLimitOnActiveUsers: values.noLimitOnActiveUsers,
+			isPrivate: values.isPrivate,
+			shortCode: session.shortCode,
+			_csrf: values._csrf 
+		})
+		.done(function(response){
+			if (values.maxActiveUsers && !values.noLimitOnActiveUsers) {
+				session.settings.maxActiveUsers = Math.round(parseInt(values.maxActiveUsers));
+			}
+			session.settings.noLimitOnActiveUsers = values.noLimitOnActiveUsers ? true : false;
+			session.settings.private = values.isPrivate ? true : false;
+
+			sessionSettingsModal.modal('hide');
+
+			// session changed from public to private, so we must add the share link button, and update the link that will be shown
+			if (response && response.data && response.data.newPrivateKey && session.settings.private) {
+				session.privateKey = response.data.newPrivateKey;
+				shareLink.text('http://localhost:3000/session/' + session.shortCode + '?key=' + session.privateKey);
+				shareLinkButton.show();
+			}
+
+			// if session is public, check to make sure there is no share link button
+			if (!session.settings.private) {
+				shareLinkButton.hide();
+			}
+		});
+	});
+
+	$('[data-toggle="tooltip"]').tooltip();
+
+	/*
+		End edit session settings
+	*/
+
 	// initializes socket and it's locals regarding the user and the session
 	socket.emit('set-user', user._id.toString(), getDisplayName(user.firstName, user.lastName), session.shortCode, session.user.toString());
 

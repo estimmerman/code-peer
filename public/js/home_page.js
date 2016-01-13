@@ -25,5 +25,5 @@ $(document).ready(function() {
 		toggleMaxActiveUsersInput(this.checked);
 	});
 
-	$('[data-toggle="tooltip"]').tooltip()
+	$('[data-toggle="tooltip"]').tooltip();
 });
