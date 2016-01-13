@@ -10,7 +10,7 @@ var constants = require('../helpers/constants');
  * GET /home
  * Renders home page
  */
-exports.index = function(req, res) {
+exports.index = function(req, res, next) {
 	res.locals.path = req.path;
 
 	CodeSession.findOne({ user: req.user._id }, function (err, codeSession) {
@@ -18,15 +18,12 @@ exports.index = function(req, res) {
 
 		// query filters for the sessions the user will see
 		var queryFilters = {
-			'activeUsers': 'this.activeUsers',
+			'showFull': false,
 			'timeOrder': null
 		};
 		var userFilters = req.user.filterSettings;
-		// if settings are set not to see full sessions, only
-		// show those with less than 2 active users (2 is the max per session - one student and tutor)
-		if (!userFilters.showFull) {
-			queryFilters.activeUsers = 'this.activeUsers.length < 2';
-		}
+		// if user wants to see full session
+		queryFilters.showFull = userFilters.showFull;
 		// set time filter
 		if (userFilters.timeOrder == 'new') {
 			queryFilters.timeOrder = 'desc';
@@ -51,11 +48,19 @@ exports.index = function(req, res) {
 			// query for sessions given filters
 			// session must be active
 			// a session with 0 active users will never be active
-			CodeSession.find({ active: true, $where: queryFilters.activeUsers })
+			CodeSession.find({ active: true })
 			.populate('user', 'firstName lastName school')
 			.sort({lastStartTime: queryFilters.timeOrder})
 			.exec(function (err, codeSessions) {
 				if (err) return next(err);
+
+				if (!queryFilters.showFull) {
+					 for (var i = 0; i < codeSessions.length; i++) {
+					 	if (!codeSessions[i].settings.noLimitOnActiveUsers && codeSessions[i].activeUsers.length >= codeSessions[i].settings.maxActiveUsers) {
+					 		codeSessions.splice(i, 1);
+					 	}
+					 }
+				}
 
 				// set the minutes since the session started for each
 				// given the helper method from helpers.js
