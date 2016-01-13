@@ -104,11 +104,7 @@ exports.getSession = function(req, res) {
  * Only creates a new session associated with their account if it doesn't exist
  */
 exports.postStartSession = function(req, res, next) {
-  if (req.body.isResume === undefined) {
-    req.flash('errors', {msg: 'Bad parameters.'});
-    return res.redirect('/');
-  }
-
+  var isResume = req.body.isResume || false;
   // see if user already has an active session (that's not their own)
   CodeSession.findOne({ activeUsers: req.user.id })
   .exec(function (err, currentSession){
@@ -128,7 +124,7 @@ exports.postStartSession = function(req, res, next) {
       var noLimitOnActiveUsers = null;
       var private = null;
 
-      if (!req.body.isResume) {
+      if (!isResume) {
         // if a user is starting a session again, they provide new settings, update them below
         maxActiveUsers = req.body.maxActiveUsers || constants.CODESESSION_DEFAULTS.maxActiveUsers;
         noLimitOnActiveUsers = req.body.noLimitOnActiveUsers ? true : constants.CODESESSION_DEFAULTS.noLimitOnActiveUsers;
@@ -137,7 +133,7 @@ exports.postStartSession = function(req, res, next) {
 
       // user has a session associated with account already, so redirect there
       if (codeSession) {
-        if (req.body.isResume) {
+        if (isResume) {
           return res.redirect('/session/' + codeSession.shortCode);
         } else {
           var settings = codeSession.settings;
@@ -162,7 +158,7 @@ exports.postStartSession = function(req, res, next) {
         }
       // no session exists, so create one and redirect to it
       } else {
-        if (req.body.isResume) {
+        if (isResume) {
           req.flash('errors', {msg: 'You cannot resume a session that has never been created in the first place.'});
           return res.redirect('/');
         }

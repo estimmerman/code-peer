@@ -8,7 +8,7 @@ block content
 		if ownSession && ownSession.active
 			form.form-horizontal(id='resume-session-form', action='/session/start', method='POST')
 				input(type='hidden', name='_csrf', value=_csrf)
-				input(type='hidden', name='isResume', value=true)
+				input.hidden(type='checkbox', name='isResume', checked)
 				button.btn.btn-lg.btn-primary(type='submit')
 					i.fa.fa-share-alt
 					| Resume Session
@@ -53,7 +53,7 @@ block content
 					.modal-footer
 						button.btn.btn-default.btn-primary-padding(type='button', data-dismiss='modal') Cancel
 						input(type='hidden', name='_csrf', value=_csrf)
-						input(type='hidden', name='isResume', value=false)
+						input.hidden(type='checkbox', name='isResume')
 						button.btn.btn-primary.m-left-5(type='submit') Begin
 
 	script(type='text/javascript').
