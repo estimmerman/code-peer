@@ -8,7 +8,10 @@ mixin session_list(codeSessions)
 					| #{obj.user.school}
 				.col-sm-6
 					i.fa.fa-user
-					| Active Users: #{obj.activeUsers.length}
+					if obj.settings.noLimitOnActiveUsers
+						| Active Users: #{obj.activeUsers.length} / &infin;
+					else
+						| Active Users: #{obj.activeUsers.length} / #{obj.settings.maxActiveUsers}
 					if obj.minutesStartedAgo == 1
 						p Session started #{obj.minutesStartedAgo} minute ago
 					else
