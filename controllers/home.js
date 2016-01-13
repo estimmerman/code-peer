@@ -48,7 +48,7 @@ exports.index = function(req, res, next) {
 			// query for sessions given filters
 			// session must be active
 			// a session with 0 active users will never be active
-			CodeSession.find({ active: true })
+			CodeSession.find({ active: true, 'settings.private': { $ne: true } })
 			.populate('user', 'firstName lastName school')
 			.sort({lastStartTime: queryFilters.timeOrder})
 			.exec(function (err, codeSessions) {
