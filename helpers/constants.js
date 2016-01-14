@@ -47,5 +47,9 @@ module.exports = Object.freeze({
 		maxActiveUsers: 2,
 		noLimitOnActiveUsers: false,
 		isPrivate: false
+	},
+	ENVIRONMENTS : {
+		development: 'development',
+		production: 'production'
 	}
 });

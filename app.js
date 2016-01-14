@@ -64,6 +64,11 @@ var server = require('http').Server(app);
  */
 var io = require('socket.io')(server);
 
+/*
+ * Get environment 
+ */
+var env = process.env.NODE_ENV || app.get('env');
+
 /**
  * Connect to MongoDB.
  */
@@ -153,13 +158,15 @@ app.post('/filter/time', passportConf.isAuthenticated, userController.postChange
 /**
  * Error Handler.
  */
-app.use(errorHandler());
+if (env === 'development'){
+  app.use(errorHandler());  
+}
 
 /**
  * Start Express server.
  */
 server.listen(app.get('port'), function() {
-  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+  console.log('Express server listening on port %d in %s mode', app.get('port'), env);
 });
 
 /**

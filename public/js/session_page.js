@@ -340,7 +340,7 @@ $(document).on('ready', function(){
 	}
 
 	$('#copyShareLink').on('click', function(){
-		window.prompt('Copy and click enter.', 'http://localhost:3000/session/' + session.shortCode + '?key=' + session.privateKey);
+		window.prompt('Copy and click enter.', base_uri + '/session/' + session.shortCode + '?key=' + session.privateKey);
 	});
 
 	/*
@@ -402,7 +402,7 @@ $(document).on('ready', function(){
 			// session changed from public to private, so we must add the share link button, and update the link that will be shown
 			if (response && response.data && response.data.newPrivateKey && session.settings.private) {
 				session.privateKey = response.data.newPrivateKey;
-				shareLink.text('http://localhost:3000/session/' + session.shortCode + '?key=' + session.privateKey);
+				shareLink.text(base_uri + '/session/' + session.shortCode + '?key=' + session.privateKey);
 				shareLinkButton.show();
 			}
 

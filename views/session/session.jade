@@ -133,7 +133,7 @@ block content
 					.modal-body
 						p Share the following private link to allow others to join this session.
 						i.fa.fa-clipboard.cursor(id='copyShareLink')
-						p.bold.inline-block(id='shareLink') http://localhost:3000/session/#{codeSession.shortCode}?key=#{codeSession.privateKey}
+						p.bold.inline-block(id='shareLink') #{base_uri}/session/#{codeSession.shortCode}?key=#{codeSession.privateKey}
 
 		div.modal.fade(id="editSessionSettingsModal", tabindex='-1', role='dialog', aria-labelledby='editSessionSettingsModalLabel')
 			.modal-dialog(role='document')
@@ -167,5 +167,6 @@ block content
 	script(type='text/javascript').
 		var user = !{JSON.stringify(user)};
 		var session = !{JSON.stringify(codeSession)};
-		var csrf = !{JSON.stringify(_csrf)};		
+		var csrf = !{JSON.stringify(_csrf)};
+		var base_uri = !{JSON.stringify(base_uri)};	
 	script(src='/js/session_page.js')

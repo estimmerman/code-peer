@@ -38,7 +38,17 @@ exports.getUsernameColor = function(username, colors) {
 	return colors[index];
 }
 
+// generates a 15 character key for private sessions
 exports.generatePrivateKey = function() {
 	var characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	return Array(15).join().split(',').map(function() { return characters.charAt(Math.floor(Math.random() * characters.length)); }).join('');
+}
+
+// get base URI from the environment
+exports.getBaseUri = function(env) {
+	if (env === 'development') {
+		return 'http://localhost:3000';
+	} else {
+		return 'https://codepeer.herokuapp.com';
+	}
 }

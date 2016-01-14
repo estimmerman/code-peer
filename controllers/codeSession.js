@@ -13,6 +13,9 @@ var constants = require('../helpers/constants');
  * Renders session page
  */
 exports.getSession = function(req, res) {
+  var env = process.env.NODE_ENV || constants.ENVIRONMENTS.development;
+  var base_uri = helpers.getBaseUri(env);
+
   // gets session from the shortCode parameter in the url
   CodeSession.findOne({ shortCode: req.params.shortCode })
   .populate('activeUsers', 'firstName lastName school')
@@ -56,7 +59,8 @@ exports.getSession = function(req, res) {
           title: 'Session',
           codeSession: codeSession,
           isOwner: true,
-          languages: constants.LANGUAGES
+          languages: constants.LANGUAGES,
+          base_uri: base_uri
         });
       // another student trying to access session shouldn't be allowed
       } else {
@@ -96,7 +100,8 @@ exports.getSession = function(req, res) {
             title: 'Session',
             codeSession: codeSession,
             isOwner: false,
-            languages: constants.LANGUAGES
+            languages: constants.LANGUAGES,
+            base_uri: base_uri
           });
         });
       }
