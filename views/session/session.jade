@@ -61,7 +61,8 @@ block content
 							ul.dropdown-menu
 								include ../partials/code_theme_choices.jade
 			.col-sm-8.m-bottom-5
-				button.btn.btn-sm.btn-danger.pull-right(data-toggle='modal', href='#editSessionSettingsModal', id='openEditSessionSettingsModal') Settings
+				if isOwner
+					button.btn.btn-sm.btn-danger.pull-right(data-toggle='modal', href='#editSessionSettingsModal', id='openEditSessionSettingsModal') Settings
 				if isOwner && codeSession.settings.private && codeSession.privateKey
 					button.btn.btn-sm.btn-danger.pull-right(data-toggle="modal", href="#shareLinkModal", id='openShareLinkModal')
 						i.fa.fa-share
