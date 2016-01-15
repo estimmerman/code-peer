@@ -61,7 +61,7 @@ $(document).on('ready', function(){
 
 	// event handler for updates to the chat, and appends the message to the chat area
 	socket.on('update-chat', function(name, colors, msg) {
-		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span>: ' + msg);
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span>: ', msg);
 	});
 	// event handler for updates to the editor, sets code of the editor given the new code
 	socket.on('update-code', function(code) {
@@ -74,12 +74,12 @@ $(document).on('ready', function(){
 
 	// event handler for a user joining the session, prints message to chat area
 	socket.on('user-connected', function(user_id, name, colors) {
-		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.');
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has connected to the session.', null);
 		updateActiveUsers(user_id, name, colors, true);
 	});
 	// event handler for a user leaving the sesion, prints message to chat area
 	socket.on('user-disconnected', function(user_id, name, colors) {
-		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.');
+		updateChat('<span style="color: ' + getColorOffTheme(colors) + '">' + name + '</span> has left the session.', null);
 		updateActiveUsers(user_id, null, null, false);
 	});
 	// event handler for a user getting kicked from the session
@@ -144,7 +144,7 @@ $(document).on('ready', function(){
 		socket.emit('send-chat-message', chatBox.val().trim());
 		// update the sender's (this client) chat box immediately, since there's
 		// no need to wait for the server to respond (makes it look faster)
-		updateChat('<span style="color: ' + getColorOffTheme(socketAttrs.colors) + '">' + socketAttrs.name + '</span>: ' + chatBox.val());
+		updateChat('<span style="color: ' + getColorOffTheme(socketAttrs.colors) + '">' + socketAttrs.name + '</span>: ', chatBox.val());
 		chatBox.val('');
 	})
 
@@ -258,9 +258,12 @@ $(document).on('ready', function(){
 	}
 
 	// appends a message to the chat area and scrolls to bottom if there is overflow
-	var updateChat = function(msg) {
+	var updateChat = function(html, msg) {
 		chat = $('#chat');
-		chat.append('<p>' + msg + '</p>');
+		chat.append('<p>' + html + '</p> ');
+		var msgEl = $('<p></p>').text(msg);
+		chat.append(msgEl);
+		chat.append('</br>');
 		chat.scrollTop(chat.prop("scrollHeight"));
 	}
 

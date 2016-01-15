@@ -316,6 +316,10 @@ a:hover {
   #chat p {
     color: black;
   }
+
+  #chat-box {
+    color: black;
+  }
 }
 
 .terminal-theme {
@@ -360,6 +364,12 @@ a:hover {
   padding: 10px;
   word-wrap: break-word;
   font-size: 13px;
+}
+
+#chat p {
+  display: inline-block;
+  word-wrap: break-all;
+  white-space: nowrap;
 }
 
 .CodeMirror {
